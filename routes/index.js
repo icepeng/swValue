@@ -4,6 +4,7 @@ var fs = require('fs');
 var multipartMiddleWare = multipart();
 var router = express.Router();
 const stat_percent = [2, 4, 6, 9, 10, 12];
+const eff_max_table = [0, 0, 40, 0, 40, 0, 40, 0, 30, 30, 35, 40, 40];
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -14,15 +15,12 @@ router.get('/', function(req, res) {
 
 router.post('/', multipartMiddleWare, function(req, res) {
     fs.readFile(req.files.swarData.path, 'utf8', function(err, data) {
-        var sData;
-        sData = JSON.parse(data).runes;
-        sData = evaluateRunes(sData);
         fs.unlink(req.files.swarData.path, function(err) {
             if (err) console.log(err);
         });
-        res.render('index', {
+        return res.render('index', {
             title: 'Express',
-            Data: parseRunes(sData)
+            Data: parseRunes(evaluateRunes(JSON.parse(data).runes))
         });
     });
 });
@@ -46,31 +44,30 @@ function parseRunes(Data) {
         runeData.class = rune.class;
         runeData.slot_no = rune.slot_no;
         runeData.pri_eff = eff_table[rune.pri_eff[0]] + ' + ' + rune.pri_eff[1];
-        if(stat_percent.includes(rune.pri_eff[0])) runeData.pri_eff += '%';
+        if (stat_percent.includes(rune.pri_eff[0])) runeData.pri_eff += '%';
         if (rune.prefix_eff[0]) {
             runeData.prefix_eff = eff_table[rune.prefix_eff[0]] + ' + ' + rune.prefix_eff[1];
-            if(stat_percent.includes(rune.prefix_eff[0])) runeData.prefix_eff += '%';
+            if (stat_percent.includes(rune.prefix_eff[0])) runeData.prefix_eff += '%';
         }
         rune.sec_eff.forEach(function(eff) {
             var sec_eff = eff_table[eff[0]] + ' + ' + eff[1];
-            if(stat_percent.includes(eff[0])) sec_eff += '%';
+            if (stat_percent.includes(eff[0])) sec_eff += '%';
             runeData.sec_eff.push(sec_eff);
         });
         runeData.upgrade_curr = '+' + rune.upgrade_curr;
-        runeData.value = Math.floor(rune.value * 100 * 100) / 100;
-        runeData.max_value = Math.floor(rune.max_value * 100 * 100) / 100;
+        runeData.value = Math.round(rune.value * 100 * 100) / 100;
+        runeData.max_value = Math.round(rune.max_value * 100 * 100) / 100;
+        runeData.expected_value = Math.round(rune.expected_value * 100 * 100) / 100;
         retData.push(runeData);
     });
     retData.sort(function(a, b) {
-        return parseFloat(b.max_value) - parseFloat(a.max_value);
+        return parseFloat(b.expected_value) - parseFloat(a.expected_value);
     });
     return retData;
 }
 
-function runeValue(Data) {
+function runeValue(Data, stat_focus) {
     var value = 0;
-    var eff_max_table = [0, 0, 40, 0, 40, 0, 40, 0, 30, 30, 35, 40, 40];
-    var stat_focus = [2, 4, 6, 8, 9, 10, 12];
     if (stat_focus.includes(Data.prefix_eff[0])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
     }
@@ -83,11 +80,9 @@ function runeValue(Data) {
     return value;
 }
 
-function runeMaxValue(Data) {
+function runeMaxValue(Data, stat_focus) {
     var value = 0;
     var flag = 0;
-    var eff_max_table = [0, 0, 40, 0, 40, 0, 40, 0, 30, 30, 35, 40, 40];
-    var stat_focus = [2, 4, 6, 8, 9, 10, 12];
     if (stat_focus.includes(Data.prefix_eff[0])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
     }
@@ -106,34 +101,61 @@ function runeMaxValue(Data) {
     return value;
 }
 
-function runeProbilaty(Data) {
+function runeExpectedValue(Data, stat_focus) {
     var value = 0;
-    var flag = 0;
-    var eff_max_table = [0, 0, 40, 0, 40, 0, 40, 0, 30, 30, 35, 40, 40];
-    var stat_focus = [2, 4, 6, 8, 9, 10, 12];
+    var prob = stat_focus.length;
+    var total = 11;
+    var upgrade = Math.floor(Math.min(Data.upgrade_curr, 12) / 3);
+    var trap = 0,
+        effective = 0;
     if (stat_focus.includes(Data.prefix_eff[0])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
+        prob--;
+        total--;
+    } else if (Data.prefix_eff[0]) {
+        total--;
     }
     Data.sec_eff.forEach(function(eff) {
         if (stat_focus.includes(eff[0])) {
             value += eff[1] / eff_max_table[eff[0]];
-            flag = 1;
+            effective++;
+            prob--;
+            total--;
+        } else {
+            trap++;
+            total--;
         }
     });
-    if (flag || Data.sec_eff.length <= Math.floor(Math.min(Data.upgrade_curr, 12) / 3)) {
-        value += Math.floor((12 - Math.min(Data.upgrade_curr, 12)) / 3) * 0.2;
-    } else {
-        value += (4 + Math.floor(Math.min(Data.upgrade_curr, 12) / 3) - Data.sec_eff.length) * 0.2;
+    if (Data.slot_no === 1) {
+        if (stat_focus.includes(7)) {
+            prob--;
+            total--;
+        }
+    } else if (Data.slot_no === 3) {
+        if (stat_focus.includes(5)) {
+            prob--;
+            total--;
+        }
+    } else if (Data.slot_no !== 5) {
+        if (stat_focus.includes(Data.pri_eff[0])) {
+            prob--;
+            total--;
+        }
     }
+    if (upgrade < effective + trap) {
+        value += effective / (effective + trap) * 0.15 * (effective + trap - upgrade);
+    }
+    value += (4 - effective - trap) * 0.15 * prob / total;
     value /= 1.8;
     return value;
 }
 
 
-function evaluateRunes(Data) {
+function evaluateRunes(Data, focus = [2, 4, 6, 8, 9, 10, 12]) {
     Data.forEach(function(rune) {
-        rune.value = runeValue(rune);
-        rune.max_value = runeMaxValue(rune);
+        rune.value = runeValue(rune, focus);
+        rune.max_value = runeMaxValue(rune, focus);
+        rune.expected_value = runeExpectedValue(rune, focus);
     });
     return Data;
 }
