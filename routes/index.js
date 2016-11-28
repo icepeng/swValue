@@ -15,12 +15,15 @@ router.get('/', function(req, res) {
 
 router.post('/', multipartMiddleWare, function(req, res) {
     fs.readFile(req.files.swarData.path, 'utf8', function(err, data) {
+        var sData = {};
+        if (data.length) {
+            sData = parseRunes(evaluateRunes(JSON.parse(data).runes));
+        }
         fs.unlink(req.files.swarData.path, function(err) {
             if (err) console.log(err);
         });
         return res.render('index', {
-            title: 'Express',
-            Data: parseRunes(evaluateRunes(JSON.parse(data).runes))
+            Data: sData
         });
     });
 });
