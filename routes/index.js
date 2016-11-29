@@ -3,35 +3,40 @@ var multipart = require('connect-multiparty');
 var fs = require('fs');
 var multipartMiddleWare = multipart();
 var router = express.Router();
+
 const stat_percent = [2, 4, 6, 9, 10, 12];
 const eff_max_table = [0, 0, 40, 0, 40, 0, 40, 0, 30, 30, 35, 40, 40];
+const set_id_table = ['', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절멍', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', 'Fight', 'Determination', 'Enhance', 'Accuracy', 'Tolerance'];
+const eff_table = ['', '깡체', '체력', '깡공', '공격력', '깡방', '방어력', 'X', '공속', '치확', '치피', '효저', '효적'];
 
 /* GET home page. */
 router.get('/', function(req, res) {
+    var sData = {};
+    if(typeof req.session.data !== 'undefined' && req.session.data.length) {
+        sData = parseRunes(evaluateRunes(JSON.parse(req.session.data).runes));
+    }
     res.render('index', {
-        title: 'rune'
+        title: 'rune',
+        data: sData
     });
 });
 
-router.post('/', multipartMiddleWare, function(req, res) {
+router.get('/file_upload', function(req, res) {
+    res.render('file_upload');
+});
+
+router.post('/file_upload', multipartMiddleWare, function(req, res) {
     fs.readFile(req.files.swarData.path, 'utf8', function(err, data) {
-        var sData = {};
-        if (data.length) {
-            sData = parseRunes(evaluateRunes(JSON.parse(data).runes));
-        }
         fs.unlink(req.files.swarData.path, function(err) {
-            if (err) console.log(err);
+            if (err) throw err;
         });
-        return res.render('index', {
-            Data: sData
-        });
+        req.session.data = data;
+        return res.redirect('/');
     });
 });
 
 function parseRunes(Data) {
     var retData = [];
-    var set_id_table = ['', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절멍', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', 'Fight', 'Determination', 'Enhance', 'Accuracy', 'Tolerance'];
-    var eff_table = ['', '깡체', '체력', '깡공', '공격력', '깡방', '방어력', 'X', '공속', '치확', '치피', '효저', '효적'];
     Data.forEach(function(rune) {
         var runeData = {
             set_id: 0,

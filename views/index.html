@@ -1,73 +1,99 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>rune</title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  </head>
-  <body>
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" name="swarData" />
-        <input type="submit" />
-    </form>
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                    <td style="" class="text-center">
-                        세트
-                    </td>
-                    <td style="" class="text-center">
-                        등급
-                    </td>
-                    <td style="" class="text-center">
-                        슬롯
-                    </td>
-                    <td class="text-center">
-                        주옵션
-                    </td>
-                    <td style="" class="text-center">
-                        접두옵션
-                    </td>
-                    <td style="" class="text-center">
-                        강화
-                    </td>
-                    <td style="" class="text-center">
-                        부옵션
-                    </td>
-                    <td style="" class="text-center">
-                        가치
-                    </td>
-                    <td style="" class="text-center">
-                        최대 가치
-                    </td>
-                    <td style="" class="text-center">
-                        기댓값
-                    </td>
-                </tr>
-            </thead>
-            <tbody>
-                {% for x in Data %}
-                <tr>
-                    <td class="text-center">
-                        <input type="checkbox" name="selected[]" value="" />
-                        <td class="text-center">{{ x.set_id }}</td>
-                        <td class="text-center">{{ x.class }}</td>
-                        <td class="text-center">{{ x.slot_no }}</td>
-                        <td class="text-center">{{ x.pri_eff }}</td>
-                        <td class="text-center">{{ x.prefix_eff }}</td>
-                        <td class="text-center">{{ x.upgrade_curr }}</td>
-                        <td class="text-center">{{ x.sec_eff }}</td>
-                        <td class="text-center">{{ x.value }}%</td>
-                        <td class="text-center">{{ x.max_value }}%</td>
-                        <td class="text-center">{{ x.expected_value }}%</td>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <script src="https://use.fontawesome.com/82cfbe6c55.js"></script>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">SWValue</a>
+            </div>
+        </div>
+    </nav>
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <a href="/file_upload" data-toggle="tooltip" title="" class="btn btn-primary">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
+        </div>
     </div>
-  </body>
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-list"></i>Rune List</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
+                                <td style="" class="text-center">
+                                    세트
+                                </td>
+                                <td style="" class="text-center">
+                                    등급
+                                </td>
+                                <td style="" class="text-center">
+                                    슬롯
+                                </td>
+                                <td class="text-center">
+                                    주옵션
+                                </td>
+                                <td style="" class="text-center">
+                                    접두옵션
+                                </td>
+                                <td style="" class="text-center">
+                                    강화
+                                </td>
+                                <td style="" class="text-center">
+                                    부옵션
+                                </td>
+                                <td style="" class="text-center">
+                                    가치
+                                </td>
+                                <td style="" class="text-center">
+                                    최대 가치
+                                </td>
+                                <td style="" class="text-center">
+                                    기댓값
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for x in data %}
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" name="selected[]" value="" />
+                                    <td class="text-center">{{ x.set_id }}</td>
+                                    <td class="text-center">{{ x.class }}</td>
+                                    <td class="text-center">{{ x.slot_no }}</td>
+                                    <td class="text-center">{{ x.pri_eff }}</td>
+                                    <td class="text-center">{{ x.prefix_eff }}</td>
+                                    <td class="text-center">{{ x.upgrade_curr }}</td>
+                                    <td class="text-center">{{ x.sec_eff }}</td>
+                                    <td class="text-center">{{ x.value }}%</td>
+                                    <td class="text-center">{{ x.max_value }}%</td>
+                                    <td class="text-center">{{ x.expected_value }}%</td>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
 </html>
