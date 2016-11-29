@@ -6,9 +6,13 @@ var fs = require('fs');
 var multipartMiddleWare = multipart();
 var router = express.Router();
 
-const stat_percent = [2, 4, 6, 9, 10, 12];
+const stat_percent = [2, 4, 6, 9, 10, 11, 12];
 const eff_max_table = [0, 0, 40, 0, 40, 0, 40, 0, 30, 30, 35, 40, 40];
-const set_id_table = ['', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절멍', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', 'Fight', 'Determination', 'Enhance', 'Accuracy', 'Tolerance'];
+const pri_max_table = {
+    six:    [0, 2448, 63, 160, 63, 160, 63, 0, 42, 58, 80, 64, 64],
+    five:   [0, 2088, 51, 135, 51, 135, 51, 0, 39, 47, 64, 51, 51]
+};
+const set_id_table = ['', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절망', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', 'Fight', 'Determination', 'Enhance', 'Accuracy', 'Tolerance'];
 const eff_table = ['', '깡체', '체력', '깡공', '공격력', '깡방', '방어력', 'X', '공속', '치확', '치피', '효저', '효적'];
 
 /* GET home page. */
@@ -46,7 +50,7 @@ function parseRunes(Data) {
             slot_no: 0,
             pri_eff: '',
             prefix_eff: '',
-            sec_eff: '',
+            sec_eff: [],
             upgrade_curr: 0,
             value: 0
         };
@@ -60,9 +64,10 @@ function parseRunes(Data) {
             if (stat_percent.includes(rune.prefix_eff[0])) runeData.prefix_eff += '%';
         }
         rune.sec_eff.forEach(function(eff) {
-            runeData.sec_eff += eff_table[eff[0]] + ' + ' + eff[1];
-            if (stat_percent.includes(eff[0])) runeData.sec_eff += '%';
-            runeData.sec_eff += ' ';
+            var input;
+            input = eff_table[eff[0]] + ' + ' + eff[1];
+            if (stat_percent.includes(eff[0])) input += '%';
+            runeData.sec_eff.push(input);
         });
         runeData.upgrade_curr = '+' + rune.upgrade_curr;
         runeData.value = Math.round(rune.value * 100 * 100) / 100;
@@ -78,6 +83,9 @@ function parseRunes(Data) {
 
 function runeValue(Data, stat_focus) {
     var value = 0;
+    if ((!stat_focus.includes(Data.pri_eff[0]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
+        return 0;
+    }
     if (stat_focus.includes(Data.prefix_eff[0])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
     }
@@ -86,6 +94,9 @@ function runeValue(Data, stat_focus) {
             value += eff[1] / eff_max_table[eff[0]];
         }
     });
+    if(Data.class === 5 && Data.slot_no % 2 === 0) {
+        value -= (pri_max_table.six[Data.pri_eff[0]] - pri_max_table.five[Data.pri_eff[0]]) / eff_max_table[Data.pri_eff[0]];
+    }
     value /= 1.8;
     return value;
 }
@@ -93,6 +104,9 @@ function runeValue(Data, stat_focus) {
 function runeMaxValue(Data, stat_focus) {
     var value = 0;
     var flag = 0;
+    if ((!stat_focus.includes(Data.pri_eff[0]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
+        return 0;
+    }
     if (stat_focus.includes(Data.prefix_eff[0])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
     }
@@ -107,6 +121,9 @@ function runeMaxValue(Data, stat_focus) {
     } else {
         value += (4 + Math.floor(Math.min(Data.upgrade_curr, 12) / 3) - Data.sec_eff.length) * 0.2;
     }
+    if(Data.class === 5 && Data.slot_no % 2 === 0) {
+        value -= (pri_max_table.six[Data.pri_eff[0]] - pri_max_table.five[Data.pri_eff[0]]) / eff_max_table[Data.pri_eff[0]];
+    }
     value /= 1.8;
     return value;
 }
@@ -116,8 +133,11 @@ function runeExpectedValue(Data, stat_focus) {
     var prob = stat_focus.length;
     var total = 11;
     var upgrade = Math.floor(Math.min(Data.upgrade_curr, 12) / 3);
-    var trap = 0,
-        effective = 0;
+    var trap = 0;
+    var effective = 0;
+    if ((!stat_focus.includes(Data.pri_eff[0]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
+        return 0;
+    }
     if (stat_focus.includes(Data.prefix_eff[0])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
         prob--;
@@ -153,9 +173,12 @@ function runeExpectedValue(Data, stat_focus) {
         }
     }
     if (upgrade < effective + trap) {
-        value += effective / (effective + trap) * 0.15 * (effective + trap - upgrade);
+        value += effective / (effective + trap) * 0.16 * (effective + trap - upgrade);
     }
-    value += (4 - effective - trap) * 0.15 * prob / total;
+    value += (4 - effective - trap) * 0.16 * prob / total;
+    if(Data.class === 5 && Data.slot_no % 2 === 0) {
+        value -= (pri_max_table.six[Data.pri_eff[0]] - pri_max_table.five[Data.pri_eff[0]]) / eff_max_table[Data.pri_eff[0]];
+    }
     value /= 1.8;
     return value;
 }

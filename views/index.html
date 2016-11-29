@@ -37,55 +37,37 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                                <td style="" class="text-center">
-                                    세트
-                                </td>
-                                <td style="" class="text-center">
-                                    등급
-                                </td>
-                                <td style="" class="text-center">
-                                    슬롯
-                                </td>
-                                <td class="text-center">
-                                    주옵션
-                                </td>
-                                <td style="" class="text-center">
-                                    접두옵션
-                                </td>
-                                <td style="" class="text-center">
-                                    강화
-                                </td>
-                                <td style="" class="text-center">
-                                    부옵션
-                                </td>
-                                <td style="" class="text-center">
-                                    가치
-                                </td>
-                                <td style="" class="text-center">
-                                    최대 가치
-                                </td>
-                                <td style="" class="text-center">
-                                    기댓값
-                                </td>
+                                <td style="" class="text-center"> 세트 </td>
+                                <td style="" class="text-center"> 등급 </td>
+                                <td style="" class="text-center"> 슬롯 </td>
+                                <td style="" class="text-center"> 강화 </td>
+                                <td class="text-center"> 주옵션 </td>
+                                <td style="" class="text-center"> 접두옵션 </td>
+                                <td style="" class="text-center"> 부옵션1 </td>
+                                <td style="" class="text-center"> 부옵션2 </td>
+                                <td style="" class="text-center"> 부옵션3 </td>
+                                <td style="" class="text-center"> 부옵션4 </td>
+                                <td style="" class="text-center"> 가치 </td>
+                                <td style="" class="text-center"> 최대 가치 </td>
+                                <td style="" class="text-center"> 기댓값 </td>
                             </tr>
                         </thead>
                         <tbody>
                             {% for x in data %}
                             <tr>
-                                <td class="text-center">
-                                    <input type="checkbox" name="selected[]" value="" />
-                                    <td class="text-center">{{ x.set_id }}</td>
-                                    <td class="text-center">{{ x.class }}</td>
-                                    <td class="text-center">{{ x.slot_no }}</td>
-                                    <td class="text-center">{{ x.pri_eff }}</td>
-                                    <td class="text-center">{{ x.prefix_eff }}</td>
-                                    <td class="text-center">{{ x.upgrade_curr }}</td>
-                                    <td class="text-center">{{ x.sec_eff }}</td>
-                                    <td class="text-center">{{ x.value }}%</td>
-                                    <td class="text-center">{{ x.max_value }}%</td>
-                                    <td class="text-center">{{ x.expected_value }}%</td>
-                                </td>
+                                <td class="text-center">{{ x.set_id }}</td>
+                                <td class="text-center">{{ x.class }}</td>
+                                <td class="text-center">{{ x.slot_no }}</td>
+                                <td class="text-center">{{ x.upgrade_curr }}</td>
+                                <td class="text-center">{{ x.pri_eff }}</td>
+                                <td class="text-center">{{ x.prefix_eff }}</td>
+                                <td class="text-center">{{ x.sec_eff[0] }}</td>
+                                <td class="text-center">{{ x.sec_eff[1] }}</td>
+                                <td class="text-center">{{ x.sec_eff[2] }}</td>
+                                <td class="text-center">{{ x.sec_eff[3] }}</td>
+                                <td class="text-center">{{ x.value }}%</td>
+                                <td class="text-center">{{ x.max_value }}%</td>
+                                <td class="text-center">{{ x.expected_value }}%</td>
                             </tr>
                             {% endfor %}
                         </tbody>
