@@ -12,8 +12,8 @@ const pri_max_table = {
     six: [0, 2448, 63, 160, 63, 160, 63, 0, 42, 58, 80, 64, 64],
     five: [0, 2088, 51, 135, 51, 135, 51, 0, 39, 47, 64, 51, 51]
 };
-const set_id_table = ['', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절망', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
-const eff_table = ['', '깡체', '체력', '깡공', '공격력', '깡방', '방어력', 'X', '공속', '치확', '치피', '효저', '효적'];
+const set_id_table = ['X', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절망', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+const eff_table = ['X', '깡체', '체력', '깡공', '공격력', '깡방', '방어력', 'X', '공속', '치확', '치피', '효저', '효적'];
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -23,6 +23,9 @@ router.get('/', function(req, res) {
     };
     if (typeof req.query.filter_eff !== 'undefined') {
         sData.filter.eff = req.query.filter_eff.split(',');
+        if (sData.filter.eff.length === 0) {
+            sData.filter.eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
+        }
         for (let e of sData.filter.eff) {
             if (!eff_table.includes(e)) {
                 sData.filter.eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
@@ -34,9 +37,12 @@ router.get('/', function(req, res) {
     }
     if (typeof req.query.filter_set !== 'undefined') {
         sData.filter.set = req.query.filter_set.split(',');
+        if (sData.filter.set.length === 0) {
+            sData.filter.set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+        }
         for (let e of sData.filter.set) {
             if (!set_id_table.includes(e)) {
-                sData.filter.set = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
+                sData.filter.set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
                 break;
             }
         }
@@ -45,8 +51,11 @@ router.get('/', function(req, res) {
     }
     if (typeof req.query.filter_slot !== 'undefined') {
         sData.filter.slot = req.query.filter_slot.split(',');
+        if (sData.filter.slot.length === 0) {
+            sData.filter.slot = ['1', '2', '3', '4', '5', '6'];
+        }
         for (let e of sData.filter.slot) {
-            if (!['1','2','3','4','5','6'].includes(e)) {
+            if (!['1', '2', '3', '4', '5', '6'].includes(e)) {
                 sData.filter.slot = ['1', '2', '3', '4', '5', '6'];
                 break;
             }
@@ -84,7 +93,6 @@ router.post('/file_upload', multipartMiddleWare, function(req, res) {
 
 function parseRunes(Data, filter) {
     let retData = [];
-
     Data.forEach(function(rune) {
         let runeData = {
             set_id: 0,
@@ -149,34 +157,49 @@ function runeValue(Data, stat_focus) {
     if (Data.class === 5 && Data.slot_no % 2 === 0) {
         value -= (pri_max_table.six[Data.pri_eff[0]] - pri_max_table.five[Data.pri_eff[0]]) / eff_max_table[Data.pri_eff[0]];
     }
-    value /= 1.8;
+    value /= 1 + Math.min(4, stat_focus.length) * 0.2;
     return value;
 }
 
 function runeMaxValue(Data, stat_focus) {
     let value = 0;
-    let flag = 0;
+    let prob = stat_focus.length;
+    let flag = false;
     if ((!stat_focus.includes(eff_table[Data.pri_eff[0]]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
         return 0;
     }
     if (stat_focus.includes(eff_table[Data.prefix_eff[0]])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
+        prob--;
     }
     Data.sec_eff.forEach(function(eff) {
         if (stat_focus.includes(eff_table[eff[0]])) {
             value += eff[1] / eff_max_table[eff[0]];
-            flag = 1;
+            prob--;
+            flag = true;
         }
     });
-    if (flag || Data.sec_eff.length <= Math.floor(Math.min(Data.upgrade_curr, 12) / 3)) {
-        value += Math.floor((12 - Math.min(Data.upgrade_curr, 12)) / 3) * 0.2;
-    } else {
-        value += (4 + Math.floor(Math.min(Data.upgrade_curr, 12) / 3) - Data.sec_eff.length) * 0.2;
+    if (Data.slot_no === 1) {
+        if (stat_focus.includes(7)) {
+            prob--;
+        }
+    } else if (Data.slot_no === 3) {
+        if (stat_focus.includes(5)) {
+            prob--;
+        }
+    } else if (Data.slot_no !== 5) {
+        if (stat_focus.includes(eff_table[Data.pri_eff[0]])) {
+            prob--;
+        }
     }
+    if (flag && (Math.floor(Math.min(Data.upgrade_curr, 12) / 3) < Data.sec_eff.length)) {
+        value += (Data.sec_eff.length - Math.floor(Math.min(Data.upgrade_curr, 12) / 3)) * 0.2;
+    }
+    value += Math.min(4 - Data.sec_eff.length, prob) * 0.2;
     if (Data.class === 5 && Data.slot_no % 2 === 0) {
         value -= (pri_max_table.six[Data.pri_eff[0]] - pri_max_table.five[Data.pri_eff[0]]) / eff_max_table[Data.pri_eff[0]];
     }
-    value /= 1.8;
+    value /= 1 + Math.min(4, stat_focus.length) * 0.2;
     return value;
 }
 
@@ -231,7 +254,7 @@ function runeExpectedValue(Data, stat_focus) {
     if (Data.class === 5 && Data.slot_no % 2 === 0) {
         value -= (pri_max_table.six[Data.pri_eff[0]] - pri_max_table.five[Data.pri_eff[0]]) / eff_max_table[Data.pri_eff[0]];
     }
-    value /= 1.8;
+    value /= 1 + Math.min(4, stat_focus.length) * 0.2;
     return value;
 }
 

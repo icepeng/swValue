@@ -19,19 +19,19 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="input-set" class="control-label">세트</label>
-                                <input type="text" name="filter_set" id="input-set" value="{{ data.filter.set }}">
+                                <input type="text" name="filter_set" id="input-set" value="{{ data.filter.set }}" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="input-slot" class="control-label">슬롯</label>
-                                <input type="text" name="filter_slot" id="input-slot" value="{{ data.filter.slot }}">
+                                <input type="text" name="filter_slot" id="input-slot" value="{{ data.filter.slot }}" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="input-eff" class="control-label">유효옵</label>
-                                <input type="text" name="filter_eff" id="input-eff" value="{{ data.filter.eff }}">
+                                <input type="text" name="filter_eff" id="input-eff" value="{{ data.filter.eff }}" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-sm-4">
@@ -40,11 +40,12 @@
                                 <select name="filter_sort" id="input-sort">
                                     <option value="1" {% if data.filter.sort == 1 %}selected{% endif %}>가치</option>
                                     <option value="2" {% if data.filter.sort == 2 %}selected{% endif %}>최대 가치</option>
-                                    <option value="3" {% if data.filter.sort == 3 %}selected{% endif %}>기대값</option>
+                                    <option value="3" {% if data.filter.sort == 3 %}selected{% endif %}>기댓값</option>
                                 </select>
                             </div>
                             <div class="pull-right">
-                                <button type="submit">검색</button>
+                                <button class='btn btn-default'><a href='/'>초기화</a></button>
+                                <button class='btn btn-primary' type="submit">검색</button>
                             </div>
                         </div>
                     </form>
