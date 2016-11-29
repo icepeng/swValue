@@ -1,25 +1,66 @@
 'use strict';
 
-var express = require('express');
-var multipart = require('connect-multiparty');
-var fs = require('fs');
-var multipartMiddleWare = multipart();
-var router = express.Router();
+const express = require('express');
+const multipart = require('connect-multiparty');
+const fs = require('fs');
+const multipartMiddleWare = multipart();
+const router = express.Router();
 
 const stat_percent = [2, 4, 6, 9, 10, 11, 12];
 const eff_max_table = [0, 0, 40, 0, 40, 0, 40, 0, 30, 30, 35, 40, 40];
 const pri_max_table = {
-    six:    [0, 2448, 63, 160, 63, 160, 63, 0, 42, 58, 80, 64, 64],
-    five:   [0, 2088, 51, 135, 51, 135, 51, 0, 39, 47, 64, 51, 51]
+    six: [0, 2448, 63, 160, 63, 160, 63, 0, 42, 58, 80, 64, 64],
+    five: [0, 2088, 51, 135, 51, 135, 51, 0, 39, 47, 64, 51, 51]
 };
-const set_id_table = ['', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절망', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', 'Fight', 'Determination', 'Enhance', 'Accuracy', 'Tolerance'];
+const set_id_table = ['', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절망', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
 const eff_table = ['', '깡체', '체력', '깡공', '공격력', '깡방', '방어력', 'X', '공속', '치확', '치피', '효저', '효적'];
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    var sData = {};
-    if(typeof req.session.data !== 'undefined' && req.session.data.length) {
-        sData = parseRunes(evaluateRunes(JSON.parse(req.session.data).runes));
+    let sData = {
+        runes: [],
+        filter: {}
+    };
+    if (typeof req.query.filter_eff !== 'undefined') {
+        sData.filter.eff = req.query.filter_eff.split(',');
+        for (let e of sData.filter.eff) {
+            if (!eff_table.includes(e)) {
+                sData.filter.eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
+                break;
+            }
+        }
+    } else {
+        sData.filter.eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
+    }
+    if (typeof req.query.filter_set !== 'undefined') {
+        sData.filter.set = req.query.filter_set.split(',');
+        for (let e of sData.filter.set) {
+            if (!set_id_table.includes(e)) {
+                sData.filter.set = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
+                break;
+            }
+        }
+    } else {
+        sData.filter.set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+    }
+    if (typeof req.query.filter_slot !== 'undefined') {
+        sData.filter.slot = req.query.filter_slot.split(',');
+        for (let e of sData.filter.slot) {
+            if (!['1','2','3','4','5','6'].includes(e)) {
+                sData.filter.slot = ['1', '2', '3', '4', '5', '6'];
+                break;
+            }
+        }
+    } else {
+        sData.filter.slot = ['1', '2', '3', '4', '5', '6'];
+    }
+    if (typeof req.query.filter_sort !== 'undefined') {
+        sData.filter.sort = parseInt(req.query.filter_sort);
+    } else {
+        sData.filter.sort = 3;
+    }
+    if (typeof req.session.data !== 'undefined' && req.session.data.length) {
+        sData.runes = parseRunes(evaluateRunes(JSON.parse(req.session.data).runes, sData.filter.eff), sData.filter);
     }
     res.render('index', {
         title: 'rune',
@@ -41,10 +82,11 @@ router.post('/file_upload', multipartMiddleWare, function(req, res) {
     });
 });
 
-function parseRunes(Data) {
-    var retData = [];
+function parseRunes(Data, filter) {
+    let retData = [];
+
     Data.forEach(function(rune) {
-        var runeData = {
+        let runeData = {
             set_id: 0,
             class: 0,
             slot_no: 0,
@@ -54,6 +96,10 @@ function parseRunes(Data) {
             upgrade_curr: 0,
             value: 0
         };
+
+        if (!filter.set.includes(set_id_table[rune.set_id])) return;
+        if (!filter.slot.includes(rune.slot_no.toString())) return;
+
         runeData.set_id = set_id_table[rune.set_id];
         runeData.class = rune.class;
         runeData.slot_no = rune.slot_no;
@@ -64,7 +110,7 @@ function parseRunes(Data) {
             if (stat_percent.includes(rune.prefix_eff[0])) runeData.prefix_eff += '%';
         }
         rune.sec_eff.forEach(function(eff) {
-            var input;
+            let input;
             input = eff_table[eff[0]] + ' + ' + eff[1];
             if (stat_percent.includes(eff[0])) input += '%';
             runeData.sec_eff.push(input);
@@ -76,25 +122,31 @@ function parseRunes(Data) {
         retData.push(runeData);
     });
     retData.sort(function(a, b) {
-        return parseFloat(b.expected_value) - parseFloat(a.expected_value);
+        if (filter.sort === 1) {
+            return parseFloat(b.value) - parseFloat(a.value);
+        } else if (filter.sort === 2) {
+            return parseFloat(b.max_value) - parseFloat(a.max_value);
+        } else if (filter.sort === 3) {
+            return parseFloat(b.expected_value) - parseFloat(a.expected_value);
+        }
     });
     return retData;
 }
 
 function runeValue(Data, stat_focus) {
-    var value = 0;
-    if ((!stat_focus.includes(Data.pri_eff[0]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
+    let value = 0;
+    if ((!stat_focus.includes(eff_table[Data.pri_eff[0]]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
         return 0;
     }
-    if (stat_focus.includes(Data.prefix_eff[0])) {
+    if (stat_focus.includes(eff_table[Data.prefix_eff[0]])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
     }
     Data.sec_eff.forEach(function(eff) {
-        if (stat_focus.includes(eff[0])) {
+        if (stat_focus.includes(eff_table[eff[0]])) {
             value += eff[1] / eff_max_table[eff[0]];
         }
     });
-    if(Data.class === 5 && Data.slot_no % 2 === 0) {
+    if (Data.class === 5 && Data.slot_no % 2 === 0) {
         value -= (pri_max_table.six[Data.pri_eff[0]] - pri_max_table.five[Data.pri_eff[0]]) / eff_max_table[Data.pri_eff[0]];
     }
     value /= 1.8;
@@ -102,16 +154,16 @@ function runeValue(Data, stat_focus) {
 }
 
 function runeMaxValue(Data, stat_focus) {
-    var value = 0;
-    var flag = 0;
-    if ((!stat_focus.includes(Data.pri_eff[0]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
+    let value = 0;
+    let flag = 0;
+    if ((!stat_focus.includes(eff_table[Data.pri_eff[0]]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
         return 0;
     }
-    if (stat_focus.includes(Data.prefix_eff[0])) {
+    if (stat_focus.includes(eff_table[Data.prefix_eff[0]])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
     }
     Data.sec_eff.forEach(function(eff) {
-        if (stat_focus.includes(eff[0])) {
+        if (stat_focus.includes(eff_table[eff[0]])) {
             value += eff[1] / eff_max_table[eff[0]];
             flag = 1;
         }
@@ -121,7 +173,7 @@ function runeMaxValue(Data, stat_focus) {
     } else {
         value += (4 + Math.floor(Math.min(Data.upgrade_curr, 12) / 3) - Data.sec_eff.length) * 0.2;
     }
-    if(Data.class === 5 && Data.slot_no % 2 === 0) {
+    if (Data.class === 5 && Data.slot_no % 2 === 0) {
         value -= (pri_max_table.six[Data.pri_eff[0]] - pri_max_table.five[Data.pri_eff[0]]) / eff_max_table[Data.pri_eff[0]];
     }
     value /= 1.8;
@@ -129,16 +181,16 @@ function runeMaxValue(Data, stat_focus) {
 }
 
 function runeExpectedValue(Data, stat_focus) {
-    var value = 0;
-    var prob = stat_focus.length;
-    var total = 11;
-    var upgrade = Math.floor(Math.min(Data.upgrade_curr, 12) / 3);
-    var trap = 0;
-    var effective = 0;
-    if ((!stat_focus.includes(Data.pri_eff[0]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
+    let value = 0;
+    let prob = stat_focus.length;
+    let total = 11;
+    let upgrade = Math.floor(Math.min(Data.upgrade_curr, 12) / 3);
+    let trap = 0;
+    let effective = 0;
+    if ((!stat_focus.includes(eff_table[Data.pri_eff[0]]) && Data.slot_no % 2 === 0) || Data.class <= 4) {
         return 0;
     }
-    if (stat_focus.includes(Data.prefix_eff[0])) {
+    if (stat_focus.includes(eff_table[Data.prefix_eff[0]])) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
         prob--;
         total--;
@@ -146,7 +198,7 @@ function runeExpectedValue(Data, stat_focus) {
         total--;
     }
     Data.sec_eff.forEach(function(eff) {
-        if (stat_focus.includes(eff[0])) {
+        if (stat_focus.includes(eff_table[eff[0]])) {
             value += eff[1] / eff_max_table[eff[0]];
             effective++;
             prob--;
@@ -167,7 +219,7 @@ function runeExpectedValue(Data, stat_focus) {
             total--;
         }
     } else if (Data.slot_no !== 5) {
-        if (stat_focus.includes(Data.pri_eff[0])) {
+        if (stat_focus.includes(eff_table[Data.pri_eff[0]])) {
             prob--;
             total--;
         }
@@ -176,7 +228,7 @@ function runeExpectedValue(Data, stat_focus) {
         value += effective / (effective + trap) * 0.16 * (effective + trap - upgrade);
     }
     value += (4 - effective - trap) * 0.16 * prob / total;
-    if(Data.class === 5 && Data.slot_no % 2 === 0) {
+    if (Data.class === 5 && Data.slot_no % 2 === 0) {
         value -= (pri_max_table.six[Data.pri_eff[0]] - pri_max_table.five[Data.pri_eff[0]]) / eff_max_table[Data.pri_eff[0]];
     }
     value /= 1.8;
@@ -184,7 +236,7 @@ function runeExpectedValue(Data, stat_focus) {
 }
 
 
-function evaluateRunes(Data, focus = [2, 4, 6, 8, 9, 10, 12]) {
+function evaluateRunes(Data, focus) {
     Data.forEach(function(rune) {
         rune.value = runeValue(rune, focus);
         rune.max_value = runeMaxValue(rune, focus);

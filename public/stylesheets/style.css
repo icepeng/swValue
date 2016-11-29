@@ -76,3 +76,11 @@ html, body {
 	border-color: #e8e8e8;
 	background: #fcfcfc;
 }
+
+input, select {
+	width: 100%;
+}
+
+.well {
+	margin-top: 10px;
+}

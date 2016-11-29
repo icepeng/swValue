@@ -1,81 +1,98 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>rune</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="https://use.fontawesome.com/82cfbe6c55.js"></script>
-    <link rel="stylesheet" href="/stylesheets/style.min.css" />
-</head>
-
-<body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">SWValue</a>
-            </div>
-        </div>
-    </nav>
-    <div class="page-header">
-        <div class="container-fluid">
-            <div class="pull-right">
-                <a href="/file_upload" data-toggle="tooltip" title="" class="btn btn-primary">
-                    <i class="fa fa-plus"></i>
-                </a>
-            </div>
+{% include "header.html" %}
+<div class="page-header">
+    <div class="container-fluid">
+        <div class="pull-right">
+            <a href="/file_upload" data-toggle="tooltip" title="" class="btn btn-primary">
+                <i class="fa fa-plus"></i>
+            </a>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">
+</div>
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
                     <i class="fa fa-list"></i>Rune List</h3>
-            </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <td style="" class="text-center"> 세트 </td>
-                                <td style="" class="text-center"> 등급 </td>
-                                <td style="" class="text-center"> 슬롯 </td>
-                                <td style="" class="text-center"> 강화 </td>
-                                <td class="text-center"> 주옵션 </td>
-                                <td style="" class="text-center"> 접두옵션 </td>
-                                <td style="" class="text-center"> 부옵션1 </td>
-                                <td style="" class="text-center"> 부옵션2 </td>
-                                <td style="" class="text-center"> 부옵션3 </td>
-                                <td style="" class="text-center"> 부옵션4 </td>
-                                <td style="" class="text-center"> 가치 </td>
-                                <td style="" class="text-center"> 최대 가치 </td>
-                                <td style="" class="text-center"> 기댓값 </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for x in data %}
-                            <tr>
-                                <td class="text-center">{{ x.set_id }}</td>
-                                <td class="text-center">{{ x.class }}</td>
-                                <td class="text-center">{{ x.slot_no }}</td>
-                                <td class="text-center">{{ x.upgrade_curr }}</td>
-                                <td class="text-center">{{ x.pri_eff }}</td>
-                                <td class="text-center">{{ x.prefix_eff }}</td>
-                                <td class="text-center">{{ x.sec_eff[0] }}</td>
-                                <td class="text-center">{{ x.sec_eff[1] }}</td>
-                                <td class="text-center">{{ x.sec_eff[2] }}</td>
-                                <td class="text-center">{{ x.sec_eff[3] }}</td>
-                                <td class="text-center">{{ x.value }}%</td>
-                                <td class="text-center">{{ x.max_value }}%</td>
-                                <td class="text-center">{{ x.expected_value }}%</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="well">
+                <div class="row">
+                    <form method="get">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="input-set" class="control-label">세트</label>
+                                <input type="text" name="filter_set" id="input-set" value="{{ data.filter.set }}">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="input-slot" class="control-label">슬롯</label>
+                                <input type="text" name="filter_slot" id="input-slot" value="{{ data.filter.slot }}">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="input-eff" class="control-label">유효옵</label>
+                                <input type="text" name="filter_eff" id="input-eff" value="{{ data.filter.eff }}">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="input-sort" class="control-label">정렬</label>
+                                <select name="filter_sort" id="input-sort">
+                                    <option value="1" {% if data.filter.sort == 1 %}selected{% endif %}>가치</option>
+                                    <option value="2" {% if data.filter.sort == 2 %}selected{% endif %}>최대 가치</option>
+                                    <option value="3" {% if data.filter.sort == 3 %}selected{% endif %}>기대값</option>
+                                </select>
+                            </div>
+                            <div class="pull-right">
+                                <button type="submit">검색</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td style="" class="text-center"> 세트 </td>
+                            <td style="" class="text-center"> 등급 </td>
+                            <td style="" class="text-center"> 슬롯 </td>
+                            <td style="" class="text-center"> 강화 </td>
+                            <td class="text-center"> 주옵션 </td>
+                            <td style="" class="text-center"> 접두옵션 </td>
+                            <td style="" class="text-center"> 부옵션1 </td>
+                            <td style="" class="text-center"> 부옵션2 </td>
+                            <td style="" class="text-center"> 부옵션3 </td>
+                            <td style="" class="text-center"> 부옵션4 </td>
+                            <td style="" class="text-center"> 가치 </td>
+                            <td style="" class="text-center"> 최대 가치 </td>
+                            <td style="" class="text-center"> 기댓값 </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for x in data.runes %}
+                        <tr>
+                            <td class="text-center">{{ x.set_id }}</td>
+                            <td class="text-center">{{ x.class }}</td>
+                            <td class="text-center">{{ x.slot_no }}</td>
+                            <td class="text-center">{{ x.upgrade_curr }}</td>
+                            <td class="text-center">{{ x.pri_eff }}</td>
+                            <td class="text-center">{{ x.prefix_eff }}</td>
+                            <td class="text-center">{{ x.sec_eff[0] }}</td>
+                            <td class="text-center">{{ x.sec_eff[1] }}</td>
+                            <td class="text-center">{{ x.sec_eff[2] }}</td>
+                            <td class="text-center">{{ x.sec_eff[3] }}</td>
+                            <td class="text-center">{{ x.value }}%</td>
+                            <td class="text-center">{{ x.max_value }}%</td>
+                            <td class="text-center">{{ x.expected_value }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</body>
-
-</html>
+</div>
+{% include "footer.html" %}
