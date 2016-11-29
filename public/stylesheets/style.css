@@ -1,5 +1,4 @@
 @import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
-@import url(//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,greek-ext,vietnamese);
 
 html, body {
 	height: 100%;
@@ -11,11 +10,6 @@ html, body {
 	text-rendering: optimizeLegibility;
 	/*background: #f9f9f9;*/
 }
-h1, h2, h3, h4, h5, h6, p {
-	margin-top: 0;
-}
-
-
 .table thead td {
 	font-weight: bold;
 }

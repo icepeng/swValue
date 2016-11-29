@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var multipart = require('connect-multiparty');
 var fs = require('fs');
@@ -44,7 +46,7 @@ function parseRunes(Data) {
             slot_no: 0,
             pri_eff: '',
             prefix_eff: '',
-            sec_eff: [],
+            sec_eff: '',
             upgrade_curr: 0,
             value: 0
         };
@@ -58,9 +60,9 @@ function parseRunes(Data) {
             if (stat_percent.includes(rune.prefix_eff[0])) runeData.prefix_eff += '%';
         }
         rune.sec_eff.forEach(function(eff) {
-            var sec_eff = eff_table[eff[0]] + ' + ' + eff[1];
-            if (stat_percent.includes(eff[0])) sec_eff += '%';
-            runeData.sec_eff.push(sec_eff);
+            runeData.sec_eff += eff_table[eff[0]] + ' + ' + eff[1];
+            if (stat_percent.includes(eff[0])) runeData.sec_eff += '%';
+            runeData.sec_eff += ' ';
         });
         runeData.upgrade_curr = '+' + rune.upgrade_curr;
         runeData.value = Math.round(rune.value * 100 * 100) / 100;
