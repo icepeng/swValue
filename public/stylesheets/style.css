@@ -84,3 +84,8 @@ input, select {
 .well {
 	margin-top: 10px;
 }
+
+button.filterToggler {
+	background:none;
+	border:none; 
+}
