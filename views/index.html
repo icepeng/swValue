@@ -9,12 +9,11 @@
     </div>
 </div>
 <div class="container-fluid">
-    {% for error in errorMessage %}
-        <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i>
-        {{ error }}
-         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        </div>
-    {% endfor %}
+    {% if data.successMessage %}
+    <div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ data.successMessage }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
@@ -103,6 +102,7 @@
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
+                            <td style="width=5px;" class="text-center">&nbsp;</td>
                             <td style="" class="text-center"> 세트 </td>
                             <td style="" class="text-center"> 등급 </td>
                             <td style="" class="text-center"> 슬롯 </td>
@@ -116,11 +116,23 @@
                             <td style="" class="text-center"> 가치 </td>
                             <td style="" class="text-center"> 최대 가치 </td>
                             <td style="" class="text-center"> 기댓값 </td>
+                            <td style="width=5px;" class="text-center">&nbsp;</td>
                         </tr>
                     </thead>
                     <tbody>
                         {% for x in data.runes %}
                         <tr>
+                            {% if x.grade == 0 %}
+                            <td class="">&nbsp;</td>
+                            {% elif x.grade == 1 %}
+                            <td class="success">&nbsp;</td>
+                            {% elif x.grade == 2 %}
+                            <td class="info">&nbsp;</td>
+                            {% elif x.grade == 3 %}
+                            <td class="danger">&nbsp;</td>
+                            {% elif x.grade == 4 %}
+                            <td class="warning">&nbsp;</td>
+                            {% endif %}
                             <td class="text-center">{{ x.set_id }}</td>
                             <td class="text-center">{{ x.class }}</td>
                             <td class="text-center">{{ x.slot_no }}</td>
@@ -134,6 +146,17 @@
                             <td class="text-center">{{ x.value }}%</td>
                             <td class="text-center">{{ x.max_value }}%</td>
                             <td class="text-center">{{ x.expected_value }}%</td>
+                            {% if x.grade == 0 %}
+                            <td class="">&nbsp;</td>
+                            {% elif x.grade == 1 %}
+                            <td class="success">&nbsp;</td>
+                            {% elif x.grade == 2 %}
+                            <td class="info">&nbsp;</td>
+                            {% elif x.grade == 3 %}
+                            <td class="danger">&nbsp;</td>
+                            {% elif x.grade == 4 %}
+                            <td class="warning">&nbsp;</td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
