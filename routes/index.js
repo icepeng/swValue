@@ -69,7 +69,7 @@ router.get('/', function(req, res) {
         sData.filter.sort = 3;
     }
     if (typeof req.session.data !== 'undefined' && req.session.data.length) {
-        sData.runes = parseRunes(evaluateRunes(JSON.parse(req.session.data).runes, sData.filter.eff), sData.filter);
+        sData.runes = parseRunes(evaluateRunes(req.session.data, sData.filter.eff), sData.filter);
     }
     res.render('index', {
         title: 'rune',
@@ -86,8 +86,13 @@ router.post('/file_upload', multipartMiddleWare, function(req, res) {
         fs.unlink(req.files.swarData.path, function(err) {
             if (err) throw err;
         });
-        req.session.data = data;
-        return res.redirect('/');
+        try {
+            req.session.data = JSON.parse(data).runes;
+            return res.redirect('/');
+        }
+        catch(err) {
+            return res.render('file_upload',{errorMessage: '파일이 올바르지 않습니다.'});
+        }
     });
 });
 

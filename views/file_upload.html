@@ -1,5 +1,11 @@
 {% include "header.html" %}
 <div class="container-fluid">
+    {% if errorMessage %}
+        <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i>
+        {{ errorMessage }}
+         <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+    {% endif %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
