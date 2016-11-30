@@ -71,6 +71,10 @@ router.get('/', function(req, res) {
     if (typeof req.session.data !== 'undefined' && req.session.data.length) {
         sData.runes = parseRunes(evaluateRunes(req.session.data, sData.filter.eff), sData.filter);
     }
+    if (req.session.successMessage) {
+        sData.successMessage = req.session.successMessage;
+        req.session.successMessage = null;
+    }
     res.render('index', {
         title: 'rune',
         data: sData
@@ -87,11 +91,22 @@ router.post('/file_upload', multipartMiddleWare, function(req, res) {
             if (err) throw err;
         });
         try {
-            req.session.data = JSON.parse(data).runes;
+            let dataObj = JSON.parse(data);
+            req.session.data = dataObj.runes;
+            if (dataObj.unit_list) {
+                dataObj.unit_list.forEach(function(unit) {
+                    for (let i in unit.runes) {
+                        req.session.data.push(unit.runes[i]);
+                    }
+                });
+            }
+            req.session.successMessage = `Runes imported - ${req.session.data.length} runes`;
             return res.redirect('/');
-        }
-        catch(err) {
-            return res.render('file_upload',{errorMessage: '파일이 올바르지 않습니다.'});
+        } catch (err) {
+            console.error(err);
+            return res.render('file_upload', {
+                errorMessage: '파일이 올바르지 않습니다.'
+            });
         }
     });
 });
@@ -132,6 +147,7 @@ function parseRunes(Data, filter) {
         runeData.value = Math.round(rune.value * 100 * 100) / 100;
         runeData.max_value = Math.round(rune.max_value * 100 * 100) / 100;
         runeData.expected_value = Math.round(rune.expected_value * 100 * 100) / 100;
+        runeData.grade = runeData.sec_eff.length;
         retData.push(runeData);
     });
     retData.sort(function(a, b) {
@@ -185,7 +201,7 @@ function runeMaxValue(Data, stat_focus) {
         value += Data.prefix_eff[1] / eff_max_table[Data.prefix_eff[0]];
         prob--;
     }
-    if(Data.class === 5) {
+    if (Data.class === 5) {
         multiplier *= 0.85;
     }
     Data.sec_eff.forEach(function(eff) {
