@@ -19,61 +19,122 @@ const default_filter_eff = ['체력', '공격력', '방어력', '공속', '치�
 const default_filter_set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
 const default_filter_slot = ['1', '2', '3', '4', '5', '6'];
 
+const filter_list_eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적', '효저'];
+const filter_list_set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+const filter_list_slot = ['1', '2', '3', '4', '5', '6'];
+
 /* GET home page. */
 router.get('/', function(req, res) {
     let sData = {
         runes: [],
-        filter: {}
+        filter: {
+            eff: [],
+            set: [],
+            slot: []
+        },
+        filter_list: {}
     };
-    if (typeof req.query.filter_eff !== 'undefined') {
-        sData.filter.eff = req.query.filter_eff.split(',');
-        if (sData.filter.eff.length === 0) {
-            sData.filter.eff = default_filter_eff;
-        }
-        for (let e of sData.filter.eff) {
-            if (!eff_table.includes(e)) {
-                sData.filter.eff = default_filter_eff;
-                break;
+    let arr = [];
+    let filter = {
+        eff: [],
+        set: [],
+        slot: []
+    };
+
+    try {
+        arr = [];
+        if (typeof req.query.filter_eff === 'undefined') throw 'no filter';
+        if (req.query.filter_eff.length === 0) throw 'no element';
+        for (let eff in req.query.filter_eff) {
+            if (req.query.filter_eff.hasOwnProperty(eff)) {
+                arr.push(eff);
             }
         }
-    } else {
-        sData.filter.eff = default_filter_eff;
-    }
-    if (typeof req.query.filter_set !== 'undefined') {
-        sData.filter.set = req.query.filter_set.split(',');
-        if (sData.filter.set.length === 0) {
-            sData.filter.set = default_filter_set;
-        }
-        for (let e of sData.filter.set) {
-            if (!set_id_table.includes(e)) {
-                sData.filter.set = default_filter_set;
-                break;
+    } catch (err) {
+        arr = default_filter_eff;
+    } finally {
+        for (let e of filter_list_eff) {
+            if (arr.includes(e)) {
+                sData.filter.eff.push({
+                    name: e,
+                    active: true
+                });
+                filter.eff.push(e);
+            } else {
+                sData.filter.eff.push({
+                    name: e,
+                    active: false
+                });
             }
         }
-    } else {
-        sData.filter.set = default_filter_set;
     }
-    if (typeof req.query.filter_slot !== 'undefined') {
-        sData.filter.slot = req.query.filter_slot.split(',');
-        if (sData.filter.slot.length === 0) {
-            sData.filter.slot = default_filter_slot;
-        }
-        for (let e of sData.filter.slot) {
-            if (!default_filter_slot.includes(e)) {
-                sData.filter.slot = default_filter_slot;
-                break;
+
+    try {
+        arr = [];
+        if (typeof req.query.filter_set === 'undefined') throw 'no filter';
+        if (req.query.filter_set.length === 0) throw 'no element';
+        for (let set in req.query.filter_set) {
+            if (req.query.filter_set.hasOwnProperty(set)) {
+                arr.push(set);
             }
         }
-    } else {
-        sData.filter.slot = default_filter_slot;
+    } catch (err) {
+        arr = default_filter_set;
+    } finally {
+        for (let e of filter_list_set) {
+            if (arr.includes(e)) {
+                sData.filter.set.push({
+                    name: e,
+                    active: true
+                });
+                filter.set.push(e);
+            } else {
+                sData.filter.set.push({
+                    name: e,
+                    active: false
+                });
+            }
+        }
     }
+
+    try {
+        arr = [];
+        if (typeof req.query.filter_slot === 'undefined') throw 'no filter';
+        if (req.query.filter_slot.length === 0) throw 'no element';
+        for (var slot in req.query.filter_slot) {
+            if (req.query.filter_slot.hasOwnProperty(slot)) {
+                arr.push(slot.replace('s', ''));
+            }
+        }
+        console.log(req.query.filter_slot);
+    } catch (err) {
+        arr = default_filter_slot;
+    } finally {
+        for (let e of filter_list_slot) {
+            if (arr.includes(e)) {
+                sData.filter.slot.push({
+                    name: e,
+                    active: true
+                });
+                filter.slot.push(e);
+            } else {
+                sData.filter.slot.push({
+                    name: e,
+                    active: false
+                });
+            }
+        }
+    }
+
     if (typeof req.query.filter_sort !== 'undefined') {
         sData.filter.sort = parseInt(req.query.filter_sort);
     } else {
         sData.filter.sort = 3;
     }
+    filter.sort = sData.filter.sort;
+
     if (typeof req.session.data !== 'undefined' && req.session.data.length) {
-        sData.runes = parseRunes(evaluateRunes(req.session.data, sData.filter.eff), sData.filter);
+        sData.runes = parseRunes(evaluateRunes(req.session.data, filter.eff), filter);
     }
     if (req.session.successMessage) {
         sData.successMessage = req.session.successMessage;
