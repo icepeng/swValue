@@ -102,16 +102,24 @@ input, select {
     outline: 0 none;
 }
 
+.btn-group .btn + .btn {
+    margin-left: 0;
+}
+
 .btn-checkbox {
-    background: #0099cc;
-    color: #ffffff;
+    background: #fff;
+    border : 1px solid #007299;
+    color: #000;
+    border-radius: 0;
 }
 
 .btn-checkbox:hover, .btn-checkbox:focus, .btn-checkbox:active, .btn-checkbox.active {
     background: #33a6cc;
+    color: #fff;
 }
 
 .btn-checkbox:active, .btn-checkbox.active {
     background: #007299;
     box-shadow: none;
+    color: #fff;
 }
