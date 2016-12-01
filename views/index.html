@@ -10,11 +10,10 @@
 </div>
 <div class="container-fluid">
     {% if data.successMessage %}
-        <div class="alert alert-success">
-            <i class="fa fa-exclamation-circle"></i>
-            {{ data.successMessage }}
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-        </div>
+    <div class="alert alert-success">
+        <i class="fa fa-exclamation-circle"></i> {{ data.successMessage }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
     {% endif %}
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -27,17 +26,13 @@
                             <div class="form-group">
                                 <label for="input-set" class="control-label">세트</label>
                                 <div class="btn-group" data-toggle="buttons">
-                                    {% for set in data.filter.set %}
-                                        {% if set.active %}
-                                            <label class="btn btn-checkbox active">
+                                    {% for set in data.filter.set %} {% if set.active %}
+                                    <label class="btn btn-checkbox active">
                                                 <input type="checkbox" name="filter_set[{{ set.name }}]" checked autocomplete="off">{{ set.name -}}
-                                            </label>
-                                        {% else %}
-                                            <label class="btn btn-checkbox">
+                                            </label> {% else %}
+                                    <label class="btn btn-checkbox">
                                                 <input type="checkbox" name="filter_set[{{ set.name }}]" autocomplete="off">{{ set.name -}}
-                                            </label>
-                                        {% endif %}
-                                    {% endfor %}
+                                            </label> {% endif %} {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -45,17 +40,13 @@
                             <div class="form-group">
                                 <label for="input-slot" class="control-label">슬롯</label>
                                 <div class="btn-group" data-toggle="buttons">
-                                    {% for slot in data.filter.slot %}
-                                        {% if slot.active %}
-                                            <label class="btn btn-checkbox active">
+                                    {% for slot in data.filter.slot %} {% if slot.active %}
+                                    <label class="btn btn-checkbox active">
                                                 <input type="checkbox" name="filter_slot[s{{ slot.name }}]" checked autocomplete="off">{{ slot.name -}}
-                                            </label>
-                                        {% else %}
-                                            <label class="btn btn-checkbox">
+                                            </label> {% else %}
+                                    <label class="btn btn-checkbox">
                                                 <input type="checkbox" name="filter_slot[s{{ slot.name }}]" autocomplete="off">{{ slot.name -}}
-                                            </label>
-                                        {% endif %}
-                                    {% endfor %}
+                                            </label> {% endif %} {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -63,17 +54,13 @@
                             <div class="form-group">
                                 <label for="input-eff" class="control-label">슬롯</label>
                                 <div class="btn-group" data-toggle="buttons">
-                                    {% for eff in data.filter.eff %}
-                                        {% if eff.active %}
-                                            <label class="btn btn-checkbox active">
+                                    {% for eff in data.filter.eff %} {% if eff.active %}
+                                    <label class="btn btn-checkbox active">
                                                 <input type="checkbox" name="filter_eff[{{ eff.name }}]" checked autocomplete="off">{{ eff.name -}}
-                                            </label>
-                                        {% else %}
-                                            <label class="btn btn-checkbox">
+                                            </label> {% else %}
+                                    <label class="btn btn-checkbox">
                                                 <input type="checkbox" name="filter_eff[{{ eff.name }}]" autocomplete="off">{{ eff.name -}}
-                                            </label>
-                                        {% endif %}
-                                    {% endfor %}
+                                            </label> {% endif %} {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -99,7 +86,7 @@
         </div>
         <div class="panel-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover sticky-header">
                     <thead>
                         <tr>
                             <td style="width=5px;" class="text-center">&nbsp;</td>
@@ -147,43 +134,43 @@
                     </thead>
                     <tbody>
                         {% for x in data.runes %}
-                            <tr>
-                                {% if x.grade == 0 %}
-                                    <td class="">&nbsp;</td>
-                                {% elif x.grade == 1 %}
-                                    <td class="success">&nbsp;</td>
-                                {% elif x.grade == 2 %}
-                                    <td class="info">&nbsp;</td>
-                                {% elif x.grade == 3 %}
-                                    <td class="danger">&nbsp;</td>
-                                {% elif x.grade == 4 %}
-                                    <td class="warning">&nbsp;</td>
-                                {% endif %}
-                                <td class="text-center">{{ x.set_id }}</td>
-                                <td class="text-center">{{ x.class }}</td>
-                                <td class="text-center">{{ x.slot_no }}</td>
-                                <td class="text-center">{{ x.upgrade_curr }}</td>
-                                <td class="text-center">{{ x.pri_eff }}</td>
-                                <td class="text-center">{{ x.prefix_eff }}</td>
-                                <td class="text-center">{{ x.sec_eff[0] }}</td>
-                                <td class="text-center">{{ x.sec_eff[1] }}</td>
-                                <td class="text-center">{{ x.sec_eff[2] }}</td>
-                                <td class="text-center">{{ x.sec_eff[3] }}</td>
-                                <td class="text-center">{{ x.value }}%</td>
-                                <td class="text-center">{{ x.max_value }}%</td>
-                                <td class="text-center">{{ x.expected_value }}%</td>
-                                {% if x.grade == 0 %}
-                                    <td class="">&nbsp;</td>
-                                {% elif x.grade == 1 %}
-                                    <td class="success">&nbsp;</td>
-                                {% elif x.grade == 2 %}
-                                    <td class="info">&nbsp;</td>
-                                {% elif x.grade == 3 %}
-                                    <td class="danger">&nbsp;</td>
-                                {% elif x.grade == 4 %}
-                                    <td class="warning">&nbsp;</td>
-                                {% endif %}
-                            </tr>
+                        <tr>
+                            {% if x.grade == 0 %}
+                            <td class="">&nbsp;</td>
+                            {% elif x.grade == 1 %}
+                            <td class="success">&nbsp;</td>
+                            {% elif x.grade == 2 %}
+                            <td class="info">&nbsp;</td>
+                            {% elif x.grade == 3 %}
+                            <td class="danger">&nbsp;</td>
+                            {% elif x.grade == 4 %}
+                            <td class="warning">&nbsp;</td>
+                            {% endif %}
+                            <td class="text-center">{{ x.set_id }}</td>
+                            <td class="text-center">{{ x.class }}</td>
+                            <td class="text-center">{{ x.slot_no }}</td>
+                            <td class="text-center">{{ x.upgrade_curr }}</td>
+                            <td class="text-center">{{ x.pri_eff }}</td>
+                            <td class="text-center">{{ x.prefix_eff }}</td>
+                            <td class="text-center">{{ x.sec_eff[0] }}</td>
+                            <td class="text-center">{{ x.sec_eff[1] }}</td>
+                            <td class="text-center">{{ x.sec_eff[2] }}</td>
+                            <td class="text-center">{{ x.sec_eff[3] }}</td>
+                            <td class="text-center">{{ x.value }}%</td>
+                            <td class="text-center">{{ x.max_value }}%</td>
+                            <td class="text-center">{{ x.expected_value }}%</td>
+                            {% if x.grade == 0 %}
+                            <td class="">&nbsp;</td>
+                            {% elif x.grade == 1 %}
+                            <td class="success">&nbsp;</td>
+                            {% elif x.grade == 2 %}
+                            <td class="info">&nbsp;</td>
+                            {% elif x.grade == 3 %}
+                            <td class="danger">&nbsp;</td>
+                            {% elif x.grade == 4 %}
+                            <td class="warning">&nbsp;</td>
+                            {% endif %}
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -191,4 +178,14 @@
         </div>
     </div>
 </div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function() {
+        $(".sticky-header").floatThead({
+            scrollingTop: 0,
+            responsiveContainer: function($table) {
+                return $table.closest(".table-responsive");
+            }
+        });
+    });
+</script>
 {% include "footer.html" %}

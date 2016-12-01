@@ -102,13 +102,13 @@ input, select {
     outline: 0 none;
 }
 
-.btn-group .btn + .btn {
+.btn-group .btn+.btn {
     margin-left: 0;
 }
 
 .btn-checkbox {
     background: #fff;
-    border : 1px solid #007299;
+    border: 1px solid #007299;
     color: #000;
     border-radius: 0;
 }
@@ -122,4 +122,9 @@ input, select {
     background: #007299;
     box-shadow: none;
     color: #fff;
+}
+
+table.sticky-header {
+    border-bottom: none;
+    background-color: #FFF;
 }
