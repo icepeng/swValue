@@ -10,87 +10,92 @@
 </div>
 <div class="container-fluid">
     {% if data.successMessage %}
-    <div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ data.successMessage }}
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-    </div>
+        <div class="alert alert-success">
+            <i class="fa fa-exclamation-circle"></i>
+            {{ data.successMessage }}
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
     {% endif %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                    <i class="fa fa-list"></i>Rune List</h3>
+                <i class="fa fa-list"></i>Rune List</h3>
             <div class="well">
                 <div class="row">
                     <form method="get">
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="input-set" class="control-label">세트</label>
-                                <input type="text" name="filter_set" id="input-set" value="{{ data.filter.set }}" autocomplete="off">
-                                <div>
-                                    <button class="filterToggler" onclick="setFilterToggle('활력')">활력</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('수호')">수호</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('신속')">신속</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('칼날')">칼날</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('격노')">격노</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('집중')">집중</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('인내')">인내</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('맹공')">맹공</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('절망')">절망</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('흡혈')">흡혈</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('폭주')">폭주</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('응보')">응보</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('의지')">의지</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('보호')">보호</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('반격')">반격</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('파괴')">파괴</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('투지')">투지</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('결의')">결의</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('고양')">고양</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('명중')">명중</button>
-                                    <button class="filterToggler" onclick="setFilterToggle('근성')">근성</button>
+                                <input type="text" name="filter_set" id="input-set" value="{{ data.filter.set }}" autocomplete="off" hidden>
+                                <div class="btn-group">
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('활력')">활력</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('수호')">수호</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('신속')">신속</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('칼날')">칼날</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('격노')">격노</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('집중')">집중</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('인내')">인내</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('맹공')">맹공</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('절망')">절망</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('흡혈')">흡혈</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('폭주')">폭주</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('응보')">응보</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('의지')">의지</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('보호')">보호</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('반격')">반격</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('파괴')">파괴</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('투지')">투지</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('결의')">결의</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('고양')">고양</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('명중')">명중</button>
+                                    <button class="filterToggler btn btn-primary" onclick="setFilterToggle('근성')">근성</button>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="input-slot" class="control-label">슬롯</label>
-                                <input type="text" name="filter_slot" id="input-slot" value="{{ data.filter.slot }}" autocomplete="off">
-                                <div>
-                                    <button class="filterToggler" onclick="slotFilterToggle('1')">1</button>
-                                    <button class="filterToggler" onclick="slotFilterToggle('2')">2</button>
-                                    <button class="filterToggler" onclick="slotFilterToggle('3')">3</button>
-                                    <button class="filterToggler" onclick="slotFilterToggle('4')">4</button>
-                                    <button class="filterToggler" onclick="slotFilterToggle('5')">5</button>
-                                    <button class="filterToggler" onclick="slotFilterToggle('6')">6</button>
+                                <input type="text" name="filter_slot" id="input-slot" value="{{ data.filter.slot }}" autocomplete="off" hidden>
+                                <div class="btn-group">
+                                    <button class="filterToggler btn btn-primary" onclick="slotFilterToggle('1')">1</button>
+                                    <button class="filterToggler btn btn-primary" onclick="slotFilterToggle('2')">2</button>
+                                    <button class="filterToggler btn btn-primary" onclick="slotFilterToggle('3')">3</button>
+                                    <button class="filterToggler btn btn-primary" onclick="slotFilterToggle('4')">4</button>
+                                    <button class="filterToggler btn btn-primary" onclick="slotFilterToggle('5')">5</button>
+                                    <button class="filterToggler btn btn-primary" onclick="slotFilterToggle('6')">6</button>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="input-eff" class="control-label">유효옵</label>
-                                <input type="text" name="filter_eff" id="input-eff" value="{{ data.filter.eff }}" autocomplete="off">
-                                <div>
-                                    <button class="filterToggler" onclick="effFilterToggle('체력')">체력</button>
-                                    <button class="filterToggler" onclick="effFilterToggle('공격력')">공격력</button>
-                                    <button class="filterToggler" onclick="effFilterToggle('방어력')">방어력</button>
-                                    <button class="filterToggler" onclick="effFilterToggle('공속')">공속</button>
-                                    <button class="filterToggler" onclick="effFilterToggle('치확')">치확</button>
-                                    <button class="filterToggler" onclick="effFilterToggle('치피')">치피</button>
-                                    <button class="filterToggler" onclick="effFilterToggle('효적')">효적</button>
+                                <input type="text" name="filter_eff" id="input-eff" value="{{ data.filter.eff }}" autocomplete="off" hidden>
+                                <div class="btn-group">
+                                    <button class="filterToggler btn btn-primary" onclick="effFilterToggle('체력')">체력</button>
+                                    <button class="filterToggler btn btn-primary" onclick="effFilterToggle('공격력')">공격력</button>
+                                    <button class="filterToggler btn btn-primary" onclick="effFilterToggle('방어력')">방어력</button>
+                                    <button class="filterToggler btn btn-primary" onclick="effFilterToggle('공속')">공속</button>
+                                    <button class="filterToggler btn btn-primary" onclick="effFilterToggle('치확')">치확</button>
+                                    <button class="filterToggler btn btn-primary" onclick="effFilterToggle('치피')">치피</button>
+                                    <button class="filterToggler btn btn-primary" onclick="effFilterToggle('효적')">효적</button>
+                                    <button class="filterToggler btn btn-primary" onclick="effFilterToggle('효저')">효저</button>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="input-sort" class="control-label">정렬</label>
-                                <select name="filter_sort" id="input-sort">
-                                    <option value="1" {% if data.filter.sort == 1 %}selected{% endif %}>가치</option>
-                                    <option value="2" {% if data.filter.sort == 2 %}selected{% endif %}>최대 가치</option>
-                                    <option value="3" {% if data.filter.sort == 3 %}selected{% endif %}>기댓값</option>
+                                <select class="form-control" name="filter_sort" id="input-sort">
+                                    <option value="1" {% if data.filter.sort == 1 %} selected{% endif %}>가치</option>
+                                    <option value="2" {% if data.filter.sort == 2 %} selected{% endif %}>최대 가치</option>
+                                    <option value="3" {% if data.filter.sort == 3 %} selected{% endif %}>기댓값</option>
                                 </select>
                             </div>
                             <div class="pull-right">
-                                <button class='btn btn-default'><a href='/'>초기화</a></button>
-                                <button class='btn btn-primary' type="submit">검색</button>
+                                <button class="btn btn-default">
+                                    <a href="/">초기화</a>
+                                </button>
+                                <button class="btn btn-primary" type="submit">검색</button>
                             </div>
                         </div>
                     </form>
@@ -103,61 +108,87 @@
                     <thead>
                         <tr>
                             <td style="width=5px;" class="text-center">&nbsp;</td>
-                            <td style="" class="text-center"> 세트 </td>
-                            <td style="" class="text-center"> 등급 </td>
-                            <td style="" class="text-center"> 슬롯 </td>
-                            <td style="" class="text-center"> 강화 </td>
-                            <td class="text-center"> 주옵션 </td>
-                            <td style="" class="text-center"> 접두옵션 </td>
-                            <td style="" class="text-center"> 부옵션1 </td>
-                            <td style="" class="text-center"> 부옵션2 </td>
-                            <td style="" class="text-center"> 부옵션3 </td>
-                            <td style="" class="text-center"> 부옵션4 </td>
-                            <td style="" class="text-center"> 가치 </td>
-                            <td style="" class="text-center"> 최대 가치 </td>
-                            <td style="" class="text-center"> 기댓값 </td>
+                            <td style="" class="text-center">
+                                세트
+                            </td>
+                            <td style="" class="text-center">
+                                등급
+                            </td>
+                            <td style="" class="text-center">
+                                슬롯
+                            </td>
+                            <td style="" class="text-center">
+                                강화
+                            </td>
+                            <td class="text-center">
+                                주옵션
+                            </td>
+                            <td style="" class="text-center">
+                                접두옵션
+                            </td>
+                            <td style="" class="text-center">
+                                부옵션1
+                            </td>
+                            <td style="" class="text-center">
+                                부옵션2
+                            </td>
+                            <td style="" class="text-center">
+                                부옵션3
+                            </td>
+                            <td style="" class="text-center">
+                                부옵션4
+                            </td>
+                            <td style="" class="text-center">
+                                가치
+                            </td>
+                            <td style="" class="text-center">
+                                최대 가치
+                            </td>
+                            <td style="" class="text-center">
+                                기댓값
+                            </td>
                             <td style="width=5px;" class="text-center">&nbsp;</td>
                         </tr>
                     </thead>
                     <tbody>
                         {% for x in data.runes %}
-                        <tr>
-                            {% if x.grade == 0 %}
-                            <td class="">&nbsp;</td>
-                            {% elif x.grade == 1 %}
-                            <td class="success">&nbsp;</td>
-                            {% elif x.grade == 2 %}
-                            <td class="info">&nbsp;</td>
-                            {% elif x.grade == 3 %}
-                            <td class="danger">&nbsp;</td>
-                            {% elif x.grade == 4 %}
-                            <td class="warning">&nbsp;</td>
-                            {% endif %}
-                            <td class="text-center">{{ x.set_id }}</td>
-                            <td class="text-center">{{ x.class }}</td>
-                            <td class="text-center">{{ x.slot_no }}</td>
-                            <td class="text-center">{{ x.upgrade_curr }}</td>
-                            <td class="text-center">{{ x.pri_eff }}</td>
-                            <td class="text-center">{{ x.prefix_eff }}</td>
-                            <td class="text-center">{{ x.sec_eff[0] }}</td>
-                            <td class="text-center">{{ x.sec_eff[1] }}</td>
-                            <td class="text-center">{{ x.sec_eff[2] }}</td>
-                            <td class="text-center">{{ x.sec_eff[3] }}</td>
-                            <td class="text-center">{{ x.value }}%</td>
-                            <td class="text-center">{{ x.max_value }}%</td>
-                            <td class="text-center">{{ x.expected_value }}%</td>
-                            {% if x.grade == 0 %}
-                            <td class="">&nbsp;</td>
-                            {% elif x.grade == 1 %}
-                            <td class="success">&nbsp;</td>
-                            {% elif x.grade == 2 %}
-                            <td class="info">&nbsp;</td>
-                            {% elif x.grade == 3 %}
-                            <td class="danger">&nbsp;</td>
-                            {% elif x.grade == 4 %}
-                            <td class="warning">&nbsp;</td>
-                            {% endif %}
-                        </tr>
+                            <tr>
+                                {% if x.grade == 0 %}
+                                    <td class="">&nbsp;</td>
+                                {% elif x.grade == 1 %}
+                                    <td class="success">&nbsp;</td>
+                                {% elif x.grade == 2 %}
+                                    <td class="info">&nbsp;</td>
+                                {% elif x.grade == 3 %}
+                                    <td class="danger">&nbsp;</td>
+                                {% elif x.grade == 4 %}
+                                    <td class="warning">&nbsp;</td>
+                                {% endif %}
+                                <td class="text-center">{{ x.set_id }}</td>
+                                <td class="text-center">{{ x.class }}</td>
+                                <td class="text-center">{{ x.slot_no }}</td>
+                                <td class="text-center">{{ x.upgrade_curr }}</td>
+                                <td class="text-center">{{ x.pri_eff }}</td>
+                                <td class="text-center">{{ x.prefix_eff }}</td>
+                                <td class="text-center">{{ x.sec_eff[0] }}</td>
+                                <td class="text-center">{{ x.sec_eff[1] }}</td>
+                                <td class="text-center">{{ x.sec_eff[2] }}</td>
+                                <td class="text-center">{{ x.sec_eff[3] }}</td>
+                                <td class="text-center">{{ x.value }}%</td>
+                                <td class="text-center">{{ x.max_value }}%</td>
+                                <td class="text-center">{{ x.expected_value }}%</td>
+                                {% if x.grade == 0 %}
+                                    <td class="">&nbsp;</td>
+                                {% elif x.grade == 1 %}
+                                    <td class="success">&nbsp;</td>
+                                {% elif x.grade == 2 %}
+                                    <td class="info">&nbsp;</td>
+                                {% elif x.grade == 3 %}
+                                    <td class="danger">&nbsp;</td>
+                                {% elif x.grade == 4 %}
+                                    <td class="warning">&nbsp;</td>
+                                {% endif %}
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -171,61 +202,98 @@
     var effFilterField = document.getElementById("input-eff");
     var slotFilterField = document.getElementById("input-slot");
 
-    function setFilterToggle(set){
-      var defaultSet = ["활력","수호","신속","칼날","격노","집중","인내","맹공","절망","흡혈","폭주","응보","의지","보호","반격","파괴","투지","결의","고양","명중","근성"];
-      
-      var str='';
-      var res=[];
-      var split=[];
+    function setFilterToggle(set) {
+        var defaultSet = [
+            "활력",
+            "수호",
+            "신속",
+            "칼날",
+            "격노",
+            "집중",
+            "인내",
+            "맹공",
+            "절망",
+            "흡혈",
+            "폭주",
+            "응보",
+            "의지",
+            "보호",
+            "반격",
+            "파괴",
+            "투지",
+            "결의",
+            "고양",
+            "명중",
+            "근성"
+        ];
 
-      str=setFilterField.value;
-      split=str.split(',');
-      for (var i in split){
-        if((defaultSet.indexOf(split[i])+1)&&split[i]!=set)
-          res.push(split[i]);
-      }
-      if(split.indexOf(set)<0)
-        res.push(set);
+        var str = '';
+        var res = [];
+        var split = [];
 
-      setFilterField.value = res.join();
+        str = setFilterField.value;
+        split = str.split(',');
+        for (var i in split) {
+            if ((defaultSet.indexOf(split[i]) + 1) && split[i] != set)
+                res.push(split[i]);
+            }
+        if (split.indexOf(set) < 0)
+            res.push(set);
+
+        setFilterField.value = res.join();
     }
 
-    function effFilterToggle(set){
-      var defaultEff = ["체력","공격력","방어력","공속","치확","치피","효적"];
-      
-      var str='';
-      var res=[];
-      var split=[];
+    function effFilterToggle(set) {
+        var defaultEff = [
+            "체력",
+            "공격력",
+            "방어력",
+            "공속",
+            "치확",
+            "치피",
+            "효적"
+        ];
 
-      str=effFilterField.value;
-      split=str.split(',');
-      for (var i in split){
-        if((defaultEff.indexOf(split[i])+1)&&split[i]!=set)
-          res.push(split[i]);
-      }
-      if(split.indexOf(set)<0)
-        res.push(set);
+        var str = '';
+        var res = [];
+        var split = [];
 
-      effFilterField.value = res.join();
+        str = effFilterField.value;
+        split = str.split(',');
+        for (var i in split) {
+            if ((defaultEff.indexOf(split[i]) + 1) && split[i] != set)
+                res.push(split[i]);
+            }
+        if (split.indexOf(set) < 0)
+            res.push(set);
+
+        effFilterField.value = res.join();
     }
 
-    function slotFilterToggle(set){
-      var defaultSlot = ["1","2","3","4","5","6"];
-      
-      var str='';
-      var res=[];
-      var split=[];
+    function slotFilterToggle(set) {
+        var defaultSlot = [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"
+        ];
 
-      str=slotFilterField.value;
-      split=str.split(',');
-      for (var i in split){
-        if((defaultSlot.indexOf(split[i])+1)&&split[i]!=set)
-          res.push(split[i]);
-      }
-      if(split.indexOf(set)<0)
-        res.push(set);
+        var str = '';
+        var res = [];
+        var split = [];
 
-      slotFilterField.value = res.join();
+        str = slotFilterField.value;
+        split = str.split(',');
+        for (var i in split) {
+            if ((defaultSlot.indexOf(split[i]) + 1) && split[i] != set)
+                res.push(split[i]);
+            }
+        if (split.indexOf(set) < 0)
+            res.push(set);
+
+        slotFilterField.value = res.join();
     }
 </script>
 

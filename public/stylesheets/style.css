@@ -85,7 +85,6 @@ input, select {
 	margin-top: 10px;
 }
 
-button.filterToggler {
-	background:none;
-	border:none; 
+.btn-group {
+	width: 100%;
 }
