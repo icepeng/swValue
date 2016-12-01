@@ -15,6 +15,10 @@ const pri_max_table = {
 const set_id_table = ['X', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절망', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
 const eff_table = ['X', '깡체', '체력', '깡공', '공격력', '깡방', '방어력', 'X', '공속', '치확', '치피', '효저', '효적'];
 
+const default_filter_eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
+const default_filter_set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+const default_filter_slot = ['1', '2', '3', '4', '5', '6'];
+
 /* GET home page. */
 router.get('/', function(req, res) {
     let sData = {
@@ -24,44 +28,44 @@ router.get('/', function(req, res) {
     if (typeof req.query.filter_eff !== 'undefined') {
         sData.filter.eff = req.query.filter_eff.split(',');
         if (sData.filter.eff.length === 0) {
-            sData.filter.eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
+            sData.filter.eff = default_filter_eff;
         }
         for (let e of sData.filter.eff) {
             if (!eff_table.includes(e)) {
-                sData.filter.eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
+                sData.filter.eff = default_filter_eff;
                 break;
             }
         }
     } else {
-        sData.filter.eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
+        sData.filter.eff = default_filter_eff;
     }
     if (typeof req.query.filter_set !== 'undefined') {
         sData.filter.set = req.query.filter_set.split(',');
         if (sData.filter.set.length === 0) {
-            sData.filter.set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+            sData.filter.set = default_filter_set;
         }
         for (let e of sData.filter.set) {
             if (!set_id_table.includes(e)) {
-                sData.filter.set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+                sData.filter.set = default_filter_set;
                 break;
             }
         }
     } else {
-        sData.filter.set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+        sData.filter.set = default_filter_set;
     }
     if (typeof req.query.filter_slot !== 'undefined') {
         sData.filter.slot = req.query.filter_slot.split(',');
         if (sData.filter.slot.length === 0) {
-            sData.filter.slot = ['1', '2', '3', '4', '5', '6'];
+            sData.filter.slot = default_filter_slot;
         }
         for (let e of sData.filter.slot) {
-            if (!['1', '2', '3', '4', '5', '6'].includes(e)) {
-                sData.filter.slot = ['1', '2', '3', '4', '5', '6'];
+            if (!default_filter_slot.includes(e)) {
+                sData.filter.slot = default_filter_slot;
                 break;
             }
         }
     } else {
-        sData.filter.slot = ['1', '2', '3', '4', '5', '6'];
+        sData.filter.slot = default_filter_slot;
     }
     if (typeof req.query.filter_sort !== 'undefined') {
         sData.filter.sort = parseInt(req.query.filter_sort);

@@ -25,19 +25,59 @@
                             <div class="form-group">
                                 <label for="input-set" class="control-label">세트</label>
                                 <input type="text" name="filter_set" id="input-set" value="{{ data.filter.set }}" autocomplete="off">
+                                <div>
+                                    <button class="filterToggler" onclick="setFilterToggle('활력')">활력</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('수호')">수호</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('신속')">신속</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('칼날')">칼날</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('격노')">격노</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('집중')">집중</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('인내')">인내</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('맹공')">맹공</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('절망')">절망</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('흡혈')">흡혈</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('폭주')">폭주</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('응보')">응보</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('의지')">의지</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('보호')">보호</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('반격')">반격</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('파괴')">파괴</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('투지')">투지</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('결의')">결의</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('고양')">고양</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('명중')">명중</button>
+                                    <button class="filterToggler" onclick="setFilterToggle('근성')">근성</button>
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="input-slot" class="control-label">슬롯</label>
                                 <input type="text" name="filter_slot" id="input-slot" value="{{ data.filter.slot }}" autocomplete="off">
+                                <div>
+                                    <button class="filterToggler" onclick="slotFilterToggle('1')">1</button>
+                                    <button class="filterToggler" onclick="slotFilterToggle('2')">2</button>
+                                    <button class="filterToggler" onclick="slotFilterToggle('3')">3</button>
+                                    <button class="filterToggler" onclick="slotFilterToggle('4')">4</button>
+                                    <button class="filterToggler" onclick="slotFilterToggle('5')">5</button>
+                                    <button class="filterToggler" onclick="slotFilterToggle('6')">6</button>
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="input-eff" class="control-label">유효옵</label>
                                 <input type="text" name="filter_eff" id="input-eff" value="{{ data.filter.eff }}" autocomplete="off">
-                            </div>
+                                <div>
+                                    <button class="filterToggler" onclick="effFilterToggle('체력')">체력</button>
+                                    <button class="filterToggler" onclick="effFilterToggle('공격력')">공격력</button>
+                                    <button class="filterToggler" onclick="effFilterToggle('방어력')">방어력</button>
+                                    <button class="filterToggler" onclick="effFilterToggle('공속')">공속</button>
+                                    <button class="filterToggler" onclick="effFilterToggle('치확')">치확</button>
+                                    <button class="filterToggler" onclick="effFilterToggle('치피')">치피</button>
+                                    <button class="filterToggler" onclick="effFilterToggle('효적')">효적</button>
+                                </div>
+                            </div>                            
                         </div>
                         <div class="col-sm-4">
                             <div class="form-group">
@@ -125,4 +165,68 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    var setFilterField = document.getElementById("input-set");
+    var effFilterField = document.getElementById("input-eff");
+    var slotFilterField = document.getElementById("input-slot");
+
+    function setFilterToggle(set){
+      var defaultSet = ["활력","수호","신속","칼날","격노","집중","인내","맹공","절망","흡혈","폭주","응보","의지","보호","반격","파괴","투지","결의","고양","명중","근성"];
+      
+      var str='';
+      var res=[];
+      var split=[];
+
+      str=setFilterField.value;
+      split=str.split(',');
+      for (var i in split){
+        if((defaultSet.indexOf(split[i])+1)&&split[i]!=set)
+          res.push(split[i]);
+      }
+      if(split.indexOf(set)<0)
+        res.push(set);
+
+      setFilterField.value = res.join();
+    }
+
+    function effFilterToggle(set){
+      var defaultEff = ["체력","공격력","방어력","공속","치확","치피","효적"];
+      
+      var str='';
+      var res=[];
+      var split=[];
+
+      str=effFilterField.value;
+      split=str.split(',');
+      for (var i in split){
+        if((defaultEff.indexOf(split[i])+1)&&split[i]!=set)
+          res.push(split[i]);
+      }
+      if(split.indexOf(set)<0)
+        res.push(set);
+
+      effFilterField.value = res.join();
+    }
+
+    function slotFilterToggle(set){
+      var defaultSlot = ["1","2","3","4","5","6"];
+      
+      var str='';
+      var res=[];
+      var split=[];
+
+      str=slotFilterField.value;
+      split=str.split(',');
+      for (var i in split){
+        if((defaultSlot.indexOf(split[i])+1)&&split[i]!=set)
+          res.push(split[i]);
+      }
+      if(split.indexOf(set)<0)
+        res.push(set);
+
+      slotFilterField.value = res.join();
+    }
+</script>
+
 {% include "footer.html" %}
