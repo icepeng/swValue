@@ -79,6 +79,7 @@
                 <table class="table table-bordered table-hover sticky-header">
                     <thead>
                         <tr>
+                            <td style="width: 1px;"<td>
                             <td style="" class="text-center sortable">
                                 세트
                             </td>
@@ -122,7 +123,8 @@
                     </thead>
                     <tbody>
                         {% for x in data.runes %}
-                        <tr class="swar-border-{{ x.grade }}">
+                        <tr class="">
+                            <td style="width: 1px; border: none;" class="swar-color-{{ x.grade }}"></td>
                             <td class="text-center">{{ x.set_id }}</td>
                             <td class="text-center">{{ x.class }}</td>
                             <td class="text-center">{{ x.slot_no }}</td>

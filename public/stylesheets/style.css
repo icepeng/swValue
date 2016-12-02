@@ -128,29 +128,28 @@ input, select {
     color: #fff;
 }
 
-table.sticky-header {
-    border-bottom: none;
-    background-color: #FFF;
+.sortable:hover {
+    cursor: pointer;
 }
 
-.swar-border-0 {
-    border-left: 10px solid #FFF;
+.swar-color-0 {
+    background: #FFF;
 }
 
-.swar-border-1 {
-    border-left: 10px solid #04D25F;
+.swar-color-1 {
+    background: #04D25F;
 }
 
-.swar-border-2 {
-    border-left: 10px solid #49EED6;
+.swar-color-2 {
+    background: #49EED6;
 }
 
-.swar-border-3 {
-    border-left: 10px solid #ED88FB;
+.swar-color-3 {
+    background: #ED88FB;
 }
 
-.swar-border-4 {
-    border-left: 10px solid #FDAC51;
+.swar-color-4 {
+    background: #FDAC51;
 }
 
 #toTop {
