@@ -1,3 +1,4 @@
 node_modules/
 .eslintrc.json
 npm-debug.log
+style.min.css

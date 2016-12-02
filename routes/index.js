@@ -156,6 +156,7 @@ router.post('/file_upload', multipartMiddleWare, function(req, res) {
                     }
                 });
             }
+            if(dataObj.runes.length === 0) throw 'invalid file';
             req.session.successMessage = `Runes imported - ${req.session.data.length} runes`;
             return res.redirect('/');
         } catch (err) {
