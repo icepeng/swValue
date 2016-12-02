@@ -22,7 +22,7 @@
             <div class="well">
                 <div class="row">
                     <form method="get">
-                        <div class="col-sm-12">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="input-set" class="control-label">세트</label>
                                 <div class="btn-group" data-toggle="buttons">
@@ -36,7 +36,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="input-slot" class="control-label">슬롯</label>
                                 <div class="btn-group" data-toggle="buttons">
@@ -52,7 +52,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="input-eff" class="control-label">슬롯</label>
+                                <label for="input-eff" class="control-label">유효옵</label>
                                 <div class="btn-group" data-toggle="buttons">
                                     {% for eff in data.filter.eff %} {% if eff.active %}
                                     <label class="btn btn-checkbox active">
@@ -63,20 +63,10 @@
                                             </label> {% endif %} {% endfor %}
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <label for="input-sort" class="control-label">정렬</label>
-                                <select class="form-control" name="filter_sort" id="input-sort">
-                                    <option value="1" {% if data.filter.sort == 1 %} selected{% endif %}>가치</option>
-                                    <option value="2" {% if data.filter.sort == 2 %} selected{% endif %}>최대 가치</option>
-                                    <option value="3" {% if data.filter.sort == 3 %} selected{% endif %}>기댓값</option>
-                                </select>
-                            </div>
                             <div class="pull-right">
                                 <button class="btn btn-default">
-                                    <a href="/">초기화</a>
-                                </button>
+                                        <a href="/">초기화</a>
+                                    </button>
                                 <button class="btn btn-primary" type="submit">검색</button>
                             </div>
                         </div>
@@ -89,7 +79,6 @@
                 <table class="table table-bordered table-hover sticky-header">
                     <thead>
                         <tr>
-                            <td style="width=5px;" class="text-center">&nbsp;</td>
                             <td style="" class="text-center sortable">
                                 세트
                             </td>
@@ -105,7 +94,7 @@
                             <td class="text-center sortable">
                                 주옵션
                             </td>
-                            <td style="" class="text-center sortable">
+                            <td style="" class="text-center">
                                 접두옵션
                             </td>
                             <td style="" class="text-center">
@@ -129,23 +118,11 @@
                             <td style="" class="text-center sortable">
                                 기댓값
                             </td>
-                            <td style="width=5px;" class="text-center">&nbsp;</td>
                         </tr>
                     </thead>
                     <tbody>
                         {% for x in data.runes %}
-                        <tr>
-                            {% if x.grade == 0 %}
-                            <td class="">&nbsp;</td>
-                            {% elif x.grade == 1 %}
-                            <td class="success">&nbsp;</td>
-                            {% elif x.grade == 2 %}
-                            <td class="info">&nbsp;</td>
-                            {% elif x.grade == 3 %}
-                            <td class="danger">&nbsp;</td>
-                            {% elif x.grade == 4 %}
-                            <td class="warning">&nbsp;</td>
-                            {% endif %}
+                        <tr class="swar-border-{{ x.grade }}">
                             <td class="text-center">{{ x.set_id }}</td>
                             <td class="text-center">{{ x.class }}</td>
                             <td class="text-center">{{ x.slot_no }}</td>
@@ -159,17 +136,6 @@
                             <td class="text-center">{{ x.value }}%</td>
                             <td class="text-center">{{ x.max_value }}%</td>
                             <td class="text-center">{{ x.expected_value }}%</td>
-                            {% if x.grade == 0 %}
-                            <td class="">&nbsp;</td>
-                            {% elif x.grade == 1 %}
-                            <td class="success">&nbsp;</td>
-                            {% elif x.grade == 2 %}
-                            <td class="info">&nbsp;</td>
-                            {% elif x.grade == 3 %}
-                            <td class="danger">&nbsp;</td>
-                            {% elif x.grade == 4 %}
-                            <td class="warning">&nbsp;</td>
-                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -179,15 +145,6 @@
     </div>
 </div>
 <script language="javascript" type="text/javascript">
-    $(document).ready(function() {
-        $(".sticky-header").floatThead({
-            scrollingTop: 0,
-            responsiveContainer: function($table) {
-                return $table.closest(".table-responsive");
-            }
-
-        });
-    });
     var table = $('table>tbody');
     $('.sortable')
         .wrapInner('<span title="sort this column"/>')

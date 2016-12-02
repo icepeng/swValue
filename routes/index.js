@@ -8,7 +8,7 @@ const router = express.Router();
 const runeModel = require('./model');
 
 const default_filter_eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
-const default_filter_set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+const default_filter_set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴'];
 const default_filter_slot = ['1', '2', '3', '4', '5', '6'];
 
 const filter_list_eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적', '효저'];

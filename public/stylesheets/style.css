@@ -103,7 +103,11 @@ input, select {
 }
 
 .btn-group .btn+.btn {
-    margin-left: 0;
+    margin-left: -1px;
+}
+
+.btn-group> :first-child.btn {
+    margin-left: -1px;
 }
 
 .btn-checkbox {
@@ -127,4 +131,24 @@ input, select {
 table.sticky-header {
     border-bottom: none;
     background-color: #FFF;
+}
+
+.swar-border-0 {
+    border-left: 10px solid #FFF;
+}
+
+.swar-border-1 {
+    border-left: 10px solid #04D25F;
+}
+
+.swar-border-2 {
+    border-left: 10px solid #49EED6;
+}
+
+.swar-border-3 {
+    border-left: 10px solid #ED88FB;
+}
+
+.swar-border-4 {
+    border-left: 10px solid #FDAC51;
 }
