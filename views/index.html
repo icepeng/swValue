@@ -90,22 +90,22 @@
                     <thead>
                         <tr>
                             <td style="width=5px;" class="text-center">&nbsp;</td>
-                            <td style="" class="text-center">
+                            <td style="" class="text-center sortable">
                                 세트
                             </td>
-                            <td style="" class="text-center">
+                            <td style="" class="text-center sortable">
                                 등급
                             </td>
-                            <td style="" class="text-center">
+                            <td style="" class="text-center sortable">
                                 슬롯
                             </td>
-                            <td style="" class="text-center">
+                            <td style="" class="text-center sortable">
                                 강화
                             </td>
-                            <td class="text-center">
+                            <td class="text-center sortable">
                                 주옵션
                             </td>
-                            <td style="" class="text-center">
+                            <td style="" class="text-center sortable">
                                 접두옵션
                             </td>
                             <td style="" class="text-center">
@@ -120,13 +120,13 @@
                             <td style="" class="text-center">
                                 부옵션4
                             </td>
-                            <td style="" class="text-center">
+                            <td style="" class="text-center sortable">
                                 가치
                             </td>
-                            <td style="" class="text-center">
+                            <td style="" class="text-center sortable">
                                 최대 가치
                             </td>
-                            <td style="" class="text-center">
+                            <td style="" class="text-center sortable">
                                 기댓값
                             </td>
                             <td style="width=5px;" class="text-center">&nbsp;</td>
@@ -185,7 +185,31 @@
             responsiveContainer: function($table) {
                 return $table.closest(".table-responsive");
             }
+
         });
     });
+    var table = $('table>tbody');
+    $('.sortable')
+        .wrapInner('<span title="sort this column"/>')
+        .each(function() {
+            var th = $(this),
+                thIndex = th.index(),
+                inverse = false;
+            th.click(function() {
+                table.find('td').filter(function() {
+                    return $(this).index() === thIndex;
+                }).sortElements(function(a, b) {
+                    if ($.text([a]) == $.text([b]))
+                        return 0;
+                    return $.text([a]) > $.text([b]) ?
+                        inverse ? -1 : 1 :
+                        inverse ? 1 : -1;
+                }, function() {
+                    // parentNode is the element we want to move
+                    return this.parentNode;
+                });
+                inverse = !inverse;
+            });
+        });
 </script>
 {% include "footer.html" %}
