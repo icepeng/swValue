@@ -156,7 +156,7 @@ router.post('/file_upload', multipartMiddleWare, function(req, res) {
                     }
                 });
             }
-            if (typeof dataObj.runes.pri_eff === 'undefined') throw 'invalid file';
+            if (typeof dataObj.runes[0].pri_eff === 'undefined') throw 'invalid file';
             req.session.successMessage = `Runes imported - ${req.session.data.length} runes`;
             return res.redirect('/');
         } catch (err) {
