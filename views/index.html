@@ -52,6 +52,20 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
+                                <label for="input-pri" class="control-label">주옵션</label>
+                                <div class="btn-group" data-toggle="buttons">
+                                    {% for pri in data.filter.pri %} {% if pri.active %}
+                                    <label class="btn btn-checkbox active">
+                                                <input type="checkbox" name="filter_pri[{{ pri.name }}]" checked autocomplete="off">{{ pri.name -}}
+                                            </label> {% else %}
+                                    <label class="btn btn-checkbox">
+                                                <input type="checkbox" name="filter_pri[{{ pri.name }}]" autocomplete="off">{{ pri.name -}}
+                                            </label> {% endif %} {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-sm-offset-6">
+                            <div class="form-group">
                                 <label for="input-eff" class="control-label">유효옵</label>
                                 <div class="btn-group" data-toggle="buttons">
                                     {% for eff in data.filter.eff %} {% if eff.active %}

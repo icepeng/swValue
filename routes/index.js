@@ -9,10 +9,12 @@ const runeModel = require('./model');
 
 const default_filter_eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적'];
 const default_filter_set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴'];
+const default_filter_pri = ['깡체', '체력', '깡공', '공격력', '깡방', '방어력', '공속', '치확', '치피', '효저', '효적'];
 const default_filter_slot = ['1', '2', '3', '4', '5', '6'];
 
 const filter_list_eff = ['체력', '공격력', '방어력', '공속', '치확', '치피', '효적', '효저'];
 const filter_list_set = ['활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', '절망', '흡혈', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
+const filter_list_pri = ['깡체', '체력', '깡공', '공격력', '깡방', '방어력', '공속', '치확', '치피', '효저', '효적'];
 const filter_list_slot = ['1', '2', '3', '4', '5', '6'];
 
 /* GET home page. */
@@ -22,7 +24,8 @@ router.get('/', function(req, res) {
         filter: {
             eff: [],
             set: [],
-            slot: []
+            slot: [],
+            pri: []
         },
         filter_list: {}
     };
@@ -30,7 +33,8 @@ router.get('/', function(req, res) {
     let filter = {
         eff: [],
         set: [],
-        slot: []
+        slot: [],
+        pri: []
     };
 
     try {
@@ -91,6 +95,34 @@ router.get('/', function(req, res) {
 
     try {
         arr = [];
+        if (typeof req.query.filter_pri === 'undefined') throw 'no filter';
+        if (req.query.filter_pri.length === 0) throw 'no element';
+        for (let pri in req.query.filter_pri) {
+            if (req.query.filter_pri.hasOwnProperty(pri)) {
+                arr.push(pri);
+            }
+        }
+    } catch (err) {
+        arr = default_filter_pri;
+    } finally {
+        for (let e of filter_list_pri) {
+            if (arr.includes(e)) {
+                sData.filter.pri.push({
+                    name: e,
+                    active: true
+                });
+                filter.pri.push(e);
+            } else {
+                sData.filter.pri.push({
+                    name: e,
+                    active: false
+                });
+            }
+        }
+    }
+
+    try {
+        arr = [];
         if (typeof req.query.filter_slot === 'undefined') throw 'no filter';
         if (req.query.filter_slot.length === 0) throw 'no element';
         for (var slot in req.query.filter_slot) {
@@ -116,13 +148,6 @@ router.get('/', function(req, res) {
             }
         }
     }
-
-    if (typeof req.query.filter_sort !== 'undefined') {
-        sData.filter.sort = parseInt(req.query.filter_sort);
-    } else {
-        sData.filter.sort = 3;
-    }
-    filter.sort = sData.filter.sort;
 
     if (typeof req.session.data !== 'undefined' && req.session.data.length) {
         sData.runes = runeModel.parseRunes(runeModel.evaluateRunes(req.session.data, filter.eff), filter);

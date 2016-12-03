@@ -24,6 +24,7 @@ exports.parseRunes = function(data, filter) {
 
         if (!filter.set.includes(set_id_table[rune.set_id])) return;
         if (!filter.slot.includes(rune.slot_no.toString())) return;
+        if (!filter.pri.includes(eff_table[rune.pri_eff[0]])) return;
 
         runeData.set_id = set_id_table[rune.set_id];
         runeData.class = rune.class;
@@ -46,15 +47,6 @@ exports.parseRunes = function(data, filter) {
         runeData.expected_value = Math.round(rune.expected_value * 100 * 100) / 100;
         runeData.grade = runeData.sec_eff.length;
         retData.push(runeData);
-    });
-    retData.sort(function(a, b) {
-        if (filter.sort === 1) {
-            return parseFloat(b.value) - parseFloat(a.value);
-        } else if (filter.sort === 2) {
-            return parseFloat(b.max_value) - parseFloat(a.max_value);
-        } else if (filter.sort === 3) {
-            return parseFloat(b.expected_value) - parseFloat(a.expected_value);
-        }
     });
     return retData;
 };
