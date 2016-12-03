@@ -160,6 +160,7 @@ router.post('/file_upload', multipartMiddleWare, function(req, res) {
             req.session.successMessage = `Runes imported - ${req.session.data.length} runes`;
             return res.redirect('/');
         } catch (err) {
+            req.session.data = null;
             return res.render('file_upload', {
                 errorMessage: '파일이 올바르지 않습니다.'
             });
