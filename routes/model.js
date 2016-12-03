@@ -1,9 +1,15 @@
 const stat_percent = [2, 4, 6, 9, 10, 11, 12];
 const eff_max_table = [0, 0, 40, 0, 40, 0, 40, 0, 30, 30, 35, 40, 40];
-const pri_max_table = {
-    six: [0, 2448, 63, 160, 63, 160, 63, 0, 42, 58, 80, 64, 64],
-    five: [0, 2088, 51, 135, 51, 135, 51, 0, 39, 47, 64, 51, 51]
-};
+const pri_max_table = [
+    [],[],[],[],[],
+    [0, 2088, 51, 135, 51, 135, 51, 0, 39, 47, 65, 51, 51],
+    [0, 2448, 63, 160, 63, 160, 63, 0, 42, 58, 80, 64, 64]
+];
+const eff_upgrade_table = [
+    [],[],[],[],[],
+    [0, [90, 300], [4, 7], [8, 15], [4, 7], [8, 15], [3, 6], 0, [3, 5], [3, 5], [3, 5], [3, 7], [3, 7]],
+    [0, [135, 375], [5, 8], [10, 20], [5, 8], [10, 20], [4, 8], 0, [4, 6], [4, 6], [4, 7], [4, 8], [4, 8]]
+];
 const set_id_table = ['X', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절망', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
 const eff_table = ['X', '깡체', '체력', '깡공', '공격력', '깡방', '방어력', 'X', '공속', '치확', '치피', '효저', '효적'];
 
@@ -48,6 +54,9 @@ exports.parseRunes = function(data, filter) {
         runeData.grade = runeData.sec_eff.length;
         retData.push(runeData);
     });
+    retData.sort(function(a, b) {
+        return parseFloat(b.max_value) - parseFloat(a.max_value);
+    });
     return retData;
 };
 
@@ -75,7 +84,7 @@ function runeValue(data, stat_focus) {
         }
     });
     if (data.class === 5 && data.slot_no % 2 === 0) {
-        value -= (pri_max_table.six[data.pri_eff[0]] - pri_max_table.five[data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
+        value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     }
     if (stat_focus.length <= 1) {
         divisor = 1;
@@ -127,7 +136,7 @@ function runeMaxValue(data, stat_focus) {
     }
     value += Math.min(4 - data.sec_eff.length, prob) * multiplier;
     if (data.class === 5 && data.slot_no % 2 === 0) {
-        value -= (pri_max_table.six[data.pri_eff[0]] - pri_max_table.five[data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
+        value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     }
     if (stat_focus.length <= 1) {
         divisor = 1;
@@ -189,7 +198,7 @@ function runeExpectedValue(data, stat_focus) {
     }
     value += (4 - effective - trap) * multiplier * prob / total;
     if (data.class === 5 && data.slot_no % 2 === 0) {
-        value -= (pri_max_table.six[data.pri_eff[0]] - pri_max_table.five[data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
+        value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     }
     if (stat_focus.length <= 1) {
         divisor = 1;
