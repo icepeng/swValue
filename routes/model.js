@@ -1,5 +1,5 @@
 const stat_percent = [2, 4, 6, 9, 10, 11, 12];
-const eff_max_table = [0, 0, 40, 0, 40, 0, 40, 0, 30, 30, 35, 40, 40];
+const eff_max_table = [0, 1875, 40, 100, 40, 100, 40, 0, 30, 30, 35, 40, 40];
 const pri_max_table = [
     [],[],[],[],[],
     [0, 2088, 51, 135, 51, 135, 51, 0, 39, 47, 65, 51, 51],
@@ -30,7 +30,7 @@ exports.parseRunes = function(data, filter) {
 
         if (!filter.set.includes(set_id_table[rune.set_id])) return;
         if (!filter.slot.includes(rune.slot_no.toString())) return;
-        if (!filter.pri.includes(eff_table[rune.pri_eff[0]])) return;
+        if (!filter.pri.includes(eff_table[rune.pri_eff[0]]) && rune.slot_no % 2 !== 1) return;
 
         runeData.set_id = set_id_table[rune.set_id];
         runeData.class = rune.class;
@@ -47,7 +47,7 @@ exports.parseRunes = function(data, filter) {
             if (stat_percent.includes(eff[0])) input += '%';
             runeData.sec_eff.push(input);
         });
-        runeData.upgrade_curr = '+' + rune.upgrade_curr;
+        runeData.upgrade_curr = rune.upgrade_curr;
         runeData.value = Math.round(rune.value * 100 * 100) / 100;
         runeData.max_value = Math.round(rune.max_value * 100 * 100) / 100;
         runeData.expected_value = Math.round(rune.expected_value * 100 * 100) / 100;
@@ -72,7 +72,7 @@ exports.evaluateRunes = function(data, focus) {
 function runeValue(data, stat_focus) {
     let value = 0;
     let divisor = 0;
-    if ((!stat_focus.includes(eff_table[data.pri_eff[0]]) && data.slot_no % 2 === 0) || data.class <= 4) {
+    if (data.class <= 4) {
         return 0;
     }
     if (stat_focus.includes(eff_table[data.prefix_eff[0]])) {
@@ -101,7 +101,7 @@ function runeMaxValue(data, stat_focus) {
     let flag = false;
     let divisor = 0;
     let multiplier = 0.2;
-    if ((!stat_focus.includes(eff_table[data.pri_eff[0]]) && data.slot_no % 2 === 0) || data.class <= 4) {
+    if (data.class <= 4) {
         return 0;
     }
     if (stat_focus.includes(eff_table[data.prefix_eff[0]])) {
@@ -156,7 +156,7 @@ function runeExpectedValue(data, stat_focus) {
     let effective = 0;
     let divisor = 0;
     let multiplier = 0.16;
-    if ((!stat_focus.includes(eff_table[data.pri_eff[0]]) && data.slot_no % 2 === 0) || data.class <= 4) {
+    if (data.class <= 4) {
         return 0;
     }
     if (stat_focus.includes(eff_table[data.prefix_eff[0]])) {
