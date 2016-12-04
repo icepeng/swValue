@@ -52,6 +52,11 @@ exports.parseRunes = function(data, filter) {
         runeData.max_value = Math.round(rune.max_value * 100 * 100) / 100;
         runeData.expected_value = Math.round(rune.expected_value * 100 * 100) / 100;
         runeData.grade = runeData.sec_eff.length;
+        if (typeof rune.occupied_name !== 'undefined') {
+            runeData.occupied_name = rune.occupied_name;
+        } else {
+            runeData.occupied_name = 'X';
+        }
         retData.push(runeData);
     });
     retData.sort(function(a, b) {

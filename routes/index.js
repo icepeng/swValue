@@ -17,6 +17,12 @@ const filter_list_set = ['활력', '수호', '신속', '칼날', '격노', '집�
 const filter_list_pri = ['깡체', '체력', '깡공', '공격력', '깡방', '방어력', '공속', '치확', '치피', '효저', '효적'];
 const filter_list_slot = ['1', '2', '3', '4', '5', '6'];
 
+let id_name_table = {};
+
+fs.readFile('./public/monster_id_name.json', 'utf8', function(err, data) {
+    id_name_table = JSON.parse(data);
+});
+
 /* GET home page. */
 router.get('/', function(req, res) {
     let sData = {
@@ -177,6 +183,7 @@ router.post('/file_upload', multipartMiddleWare, function(req, res) {
             if (dataObj.unit_list) {
                 dataObj.unit_list.forEach(function(unit) {
                     for (let i in unit.runes) {
+                        unit.runes[i].occupied_name = id_name_table['n' + unit.unit_master_id];
                         req.session.data.push(unit.runes[i]);
                     }
                 });
