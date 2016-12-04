@@ -86,11 +86,7 @@ function runeValue(data, stat_focus) {
     if (data.class === 5 && data.slot_no % 2 === 0) {
         value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     }
-    if (stat_focus.length <= 1) {
-        divisor = 1;
-    } else {
-        divisor = 1 + Math.min(4, stat_focus.length) * 0.2;
-    }
+    divisor = 0.8 + Math.min(5, stat_focus.length) * 0.2;
     value /= divisor;
     return value;
 }
@@ -138,11 +134,7 @@ function runeMaxValue(data, stat_focus) {
     if (data.class === 5 && data.slot_no % 2 === 0) {
         value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     }
-    if (stat_focus.length <= 1) {
-        divisor = 1;
-    } else {
-        divisor = 1 + Math.min(4, stat_focus.length) * 0.2;
-    }
+    divisor = 0.8 + Math.min(5, stat_focus.length) * 0.2;
     value /= divisor;
     return value;
 }
@@ -200,11 +192,7 @@ function runeExpectedValue(data, stat_focus) {
     if (data.class === 5 && data.slot_no % 2 === 0) {
         value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     }
-    if (stat_focus.length <= 1) {
-        divisor = 1;
-    } else {
-        divisor = 1 + Math.min(4, stat_focus.length) * 0.2;
-    }
+    divisor = 0.8 + Math.min(5, stat_focus.length) * 0.2;
     value /= divisor;
     return value;
 }
