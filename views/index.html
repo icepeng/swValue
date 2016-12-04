@@ -10,10 +10,11 @@
 </div>
 <div class="container-fluid">
     {% if data.successMessage %}
-    <div class="alert alert-success">
-        <i class="fa fa-exclamation-circle"></i> {{ data.successMessage }}
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-    </div>
+        <div class="alert alert-success">
+            <i class="fa fa-exclamation-circle"></i>
+            {{ data.successMessage }}
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
     {% endif %}
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -26,47 +27,94 @@
                             <div class="form-group">
                                 <label for="input-set" class="control-label">세트</label>
                                 <div class="btn-group" data-toggle="buttons">
-                                    {% for set in data.filter.set %} {% if set.active %}
-                                    <label class="btn btn-checkbox active">
+                                    {% for set in data.filter.set %}
+                                        {% if set.active %}
+                                            <label id="filter-set-{{ loop.index }}" class="btn btn-checkbox active">
                                                 <input type="checkbox" name="filter_set[{{ set.name }}]" checked autocomplete="off">{{ set.name -}}
-                                            </label> {% else %}
-                                    <label class="btn btn-checkbox">
+                                            </label>
+                                        {% else %}
+                                            <label id="filter-set-{{ loop.index }}" class="btn btn-checkbox">
                                                 <input type="checkbox" name="filter_set[{{ set.name }}]" autocomplete="off">{{ set.name -}}
-                                            </label> {% endif %} {% endfor %}
+                                            </label>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
+                            </div>
+                            <label for="input-set" class="control-label">프리셋</label>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label id="preset-dealer" class="btn btn-checkbox">
+                                    <input type="radio" id="preset-dealer" autocomplete="off">딜러
+                                </label>
+                                <label id="preset-support" class="btn btn-checkbox">
+                                    <input type="radio" id="preset-support" autocomplete="off">서폿
+                                </label>
+                                <label id="preset-speed" class="btn btn-checkbox">
+                                    <input type="radio" id="preset-speed" autocomplete="off">선턴
+                                </label>
+                                <label id="preset-bomb" class="btn btn-checkbox">
+                                    <input type="radio" id="preset-bomb" autocomplete="off">폭탄
+                                </label>
+                                <label id="preset-all" class="btn btn-checkbox">
+                                    <input type="radio" id="preset-all" autocomplete="off">전체 선택
+                                </label>
+                                <label id="preset-none" class="btn btn-checkbox">
+                                    <input type="radio" id="preset-none" autocomplete="off">전체 해제
+                                </label>
                             </div>
                         </div>
                         <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="input-pri" class="control-label">주옵션(짝수)</label>
+                                <div class="btn-group" data-toggle="buttons">
+                                    {% for pri in data.filter.pri %}
+                                        {% if pri.active %}
+                                            <label id="filter-pri-{{ loop.index }}" class="btn btn-checkbox active">
+                                                <input type="checkbox" name="filter_pri[{{ pri.name }}]" checked autocomplete="off">{{ pri.name -}}
+                                            </label>
+                                        {% else %}
+                                            <label id="filter-pri-{{ loop.index }}" class="btn btn-checkbox">
+                                                <input type="checkbox" name="filter_pri[{{ pri.name }}]" autocomplete="off">{{ pri.name -}}
+                                            </label>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="input-slot" class="control-label">슬롯</label>
                                 <div class="btn-group" data-toggle="buttons">
-                                    {% for slot in data.filter.slot %} {% if slot.active %}
-                                    <label class="btn btn-checkbox active">
+                                    {% for slot in data.filter.slot %}
+                                        {% if slot.active %}
+                                            <label class="btn btn-checkbox active">
                                                 <input type="checkbox" name="filter_slot[s{{ slot.name }}]" checked autocomplete="off">{{ slot.name -}}
-                                            </label> {% else %}
-                                    <label class="btn btn-checkbox">
+                                            </label>
+                                        {% else %}
+                                            <label class="btn btn-checkbox">
                                                 <input type="checkbox" name="filter_slot[s{{ slot.name }}]" autocomplete="off">{{ slot.name -}}
-                                            </label> {% endif %} {% endfor %}
+                                            </label>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="input-eff" class="control-label">유효옵</label>
                                 <div class="btn-group" data-toggle="buttons">
-                                    {% for eff in data.filter.eff %} {% if eff.active %}
-                                    <label class="btn btn-checkbox active">
+                                    {% for eff in data.filter.eff %}
+                                        {% if eff.active %}
+                                            <label id="filter-eff-{{ loop.index }}" class="btn btn-checkbox active">
                                                 <input type="checkbox" name="filter_eff[{{ eff.name }}]" checked autocomplete="off">{{ eff.name -}}
-                                            </label> {% else %}
-                                    <label class="btn btn-checkbox">
+                                            </label>
+                                        {% else %}
+                                            <label id="filter-eff-{{ loop.index }}" class="btn btn-checkbox">
                                                 <input type="checkbox" name="filter_eff[{{ eff.name }}]" autocomplete="off">{{ eff.name -}}
-                                            </label> {% endif %} {% endfor %}
+                                            </label>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                             <div class="pull-right">
                                 <button class="btn btn-default">
-                                        <a href="/">초기화</a>
-                                    </button>
+                                    <a href="/">초기화</a>
+                                </button>
                                 <button class="btn btn-primary" type="submit">검색</button>
                             </div>
                         </div>
@@ -78,110 +126,148 @@
             <div class="table-responsive">
                 <table class="table table-bordered table-hover sticky-header">
                     <thead>
-                        <tr>
-                            <td style="width: 1px;"<td>
-                            <td style="" class="text-center sortable">
-                                세트
-                            </td>
-                            <td style="" class="text-center sortable">
-                                등급
-                            </td>
-                            <td style="" class="text-center sortable">
-                                슬롯
-                            </td>
-                            <td style="" class="text-center sortable">
-                                강화
-                            </td>
-                            <td class="text-center sortable">
-                                주옵션
-                            </td>
-                            <td style="" class="text-center">
-                                접두옵션
-                            </td>
-                            <td style="" class="text-center">
-                                부옵션1
-                            </td>
-                            <td style="" class="text-center">
-                                부옵션2
-                            </td>
-                            <td style="" class="text-center">
-                                부옵션3
-                            </td>
-                            <td style="" class="text-center">
-                                부옵션4
-                            </td>
-                            <td style="" class="text-center sortable">
-                                가치
-                            </td>
-                            <td style="" class="text-center sortable">
-                                최대 가치
-                            </td>
-                            <td style="" class="text-center sortable">
-                                기댓값
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for x in data.runes %}
-                        <tr class="">
-                            <td style="width: 1px; border: none;" class="swar-color-{{ x.grade }}"></td>
-                            <td class="text-center">{{ x.set_id }}</td>
-                            <td class="text-center">{{ x.class }}</td>
-                            <td class="text-center">{{ x.slot_no }}</td>
-                            <td class="text-center">{{ x.upgrade_curr }}</td>
-                            <td class="text-center">{{ x.pri_eff }}</td>
-                            <td class="text-center">{{ x.prefix_eff }}</td>
-                            <td class="text-center">{{ x.sec_eff[0] }}</td>
-                            <td class="text-center">{{ x.sec_eff[1] }}</td>
-                            <td class="text-center">{{ x.sec_eff[2] }}</td>
-                            <td class="text-center">{{ x.sec_eff[3] }}</td>
-                            <td class="text-center">{{ x.value }}%</td>
-                            <td class="text-center">{{ x.max_value }}%</td>
-                            <td class="text-center">{{ x.expected_value }}%</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        <tr><td style="width: 1px;" <td> <td style="" class="text-center sortable"> 세트 </td> <td style="" class="text-center sortable"> 등급 </td> <td style="" class="text-center sortable"> 슬롯 </td> <td style="" class="text-center sortable"> 강화 </td> <td class="text-center sortable"> 주옵션 </td> <td style="" class="text-center"> 접두옵션 </td> <td style="" class="text-center"> 부옵션1 </td> <td style="" class="text-center"> 부옵션2 </td> <td style="" class="text-center"> 부옵션3 </td> <td style="" class="text-center"> 부옵션4 </td> <td style="" class="text-center sortable"> 가치 </td> <td style="" class="text-center sortable"> 최대 가치 </td> <td style="" class="text-center sortable"> 기댓값 </td> </tr> </thead> <tbody> {% for x in data.runes %} <tr class=""> <td style="width: 1px; border: none;" class="swar-color-{{ x.grade }}"></td>
+                        <td class="text-center">{{ x.set_id }}</td>
+                        <td class="text-center">{{ x.class }}</td>
+                        <td class="text-center">{{ x.slot_no }}</td>
+                        <td class="text-center">+{{ x.upgrade_curr }}</td>
+                        <td class="text-center">{{ x.pri_eff }}</td>
+                        <td class="text-center">{{ x.prefix_eff }}</td>
+                        <td class="text-center">{{ x.sec_eff[0] }}</td>
+                        <td class="text-center">{{ x.sec_eff[1] }}</td>
+                        <td class="text-center">{{ x.sec_eff[2] }}</td>
+                        <td class="text-center">{{ x.sec_eff[3] }}</td>
+                        <td class="text-center">{{ x.value }}%</td>
+                        <td class="text-center">{{ x.max_value }}%</td>
+                        <td class="text-center">{{ x.expected_value }}%</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
+</div>
+</div>
 <script language="javascript" type="text/javascript">
-    var table = $('table>tbody');
-    $('.sortable')
-        .wrapInner('<span title="sort this column"/>')
-        .each(function() {
-            var th = $(this),
-                thIndex = th.index(),
-                inverse = false;
-            th.click(function() {
-                table.find('td').filter(function() {
-                    return $(this).index() === thIndex;
-                }).sortElements(function(a, b) {
-                    var aFloat = $.text([a]).match(/^([\+\-]?[0-9]*.?[0-9]*)\%?$/);
-                    var bFloat = $.text([b]).match(/^([\+\-]?[0-9]*.?[0-9]*)\%?$/);
-                    if (aFloat) {
-                        aFloat = parseFloat(aFloat[1]);
-                        bFloat = parseFloat(bFloat[1]);
-                        if (aFloat == bFloat)
-                            return 0;
-                        return aFloat > bFloat ?
-                            inverse ? -1 : 1 :
-                            inverse ? 1 : -1;
-                    } else {
-                        if ($.text([a]) == $.text([b]))
-                            return 0;
-                        return $.text([a]) > $.text([b]) ?
-                            inverse ? -1 : 1 :
-                            inverse ? 1 : -1;
-                    }
-                }, function() {
-                    // parentNode is the element we want to move
-                    return this.parentNode;
-                });
-                inverse = !inverse;
-            });
+var table = $('table>tbody');
+$('.sortable').wrapInner('<span title="sort this column"/>').each(function () {
+    var th = $(this),
+        thIndex = th.index(),
+        inverse = false;
+    th.click(function () {
+        table.find('td').filter(function () {
+            return $(this).index() === thIndex;
+        }).sortElements(function (a, b) {
+            var aFloat = $.text([a]).match(/^([\+\-]?[0-9]*.?[0-9]*)\%?$/);
+            var bFloat = $.text([b]).match(/^([\+\-]?[0-9]*.?[0-9]*)\%?$/);
+            if (aFloat) {
+                aFloat = parseFloat(aFloat[1]);
+                bFloat = parseFloat(bFloat[1]);
+                if (aFloat == bFloat)
+                    return 0;
+                return aFloat > bFloat
+                    ? inverse
+                        ? -1
+                        : 1
+                    : inverse
+                        ? 1
+                        : -1;
+            } else {
+                if ($.text([a]) == $.text([b]))
+                    return 0;
+                return $.text([a]) > $.text([b])
+                    ? inverse
+                        ? -1
+                        : 1
+                    : inverse
+                        ? 1
+                        : -1;
+            }
+        }, function () {
+            // parentNode is the element we want to move
+            return this.parentNode;
         });
+        inverse = !inverse;
+    });
+});
+
+$('#preset-dealer').click(function() {
+    toggleFilter({
+        set: [4, 5, 8, 9, 10, 11, 15],
+        pri: [4, 7, 8, 9],
+        eff: [2, 4, 5, 6]
+    });
+});
+
+$('#preset-support').click(function() {
+    toggleFilter({
+        set: [3, 6, 9, 11, 15],
+        pri: [2, 7, 11],
+        eff: [1, 4, 7]
+    });
+});
+
+$('#preset-speed').click(function() {
+    toggleFilter({
+        set: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+        pri: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        eff: [4]
+    });
+});
+
+$('#preset-bomb').click(function() {
+    toggleFilter({
+        set: [6, 8, 11],
+        pri: [4, 7, 11],
+        eff: [2, 4, 7]
+    });
+});
+
+$('#preset-all').click(function() {
+    toggleFilter({
+        set: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+        pri: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        eff: [1, 2, 3, 4, 5, 6, 7, 8]
+    });
+});
+
+$('#preset-none').click(function() {
+    toggleFilter({
+        set: [],
+        pri: [],
+        eff: []
+    });
+});
+
+function toggleFilter(preset) {
+    for (let i = 1; i <= 21; i++) {
+        if (preset.set.includes(i)) {
+            $('#filter-set-' + i.toString()).addClass("active");
+            $('#filter-set-' + i.toString()).children("input").prop('checked', true);
+        } else {
+            $('#filter-set-' + i.toString()).removeClass("active");
+            $('#filter-set-' + i.toString()).children("input").prop('checked', false);
+        }
+    }
+    for (let i = 1; i <= 11; i++) {
+        if (preset.pri.includes(i)) {
+            $('#filter-pri-' + i.toString()).addClass("active");
+            $('#filter-pri-' + i.toString()).children("input").prop('checked', true);
+        } else {
+            $('#filter-pri-' + i.toString()).removeClass("active");
+            $('#filter-pri-' + i.toString()).children("input").prop('checked', false);
+        }
+    }
+    for (let i = 1; i <= 8; i++) {
+        if (preset.eff.includes(i)) {
+            $('#filter-eff-' + i.toString()).addClass("active");
+            $('#filter-eff-' + i.toString()).children("input").prop('checked', true);
+        } else {
+            $('#filter-eff-' + i.toString()).removeClass("active");
+            $('#filter-eff-' + i.toString()).children("input").prop('checked', false);
+        }
+    }
+}
 </script>
 
 {% include "footer.html" %}

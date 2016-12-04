@@ -13,8 +13,7 @@
     "express": "~4.14.0",
     "express-session": "^1.14.2",
     "morgan": "~1.7.0",
-    "nunjucks": "^3.0.0",
-    "serve-favicon": "~2.3.0"
+    "nunjucks": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^3.11.1",
