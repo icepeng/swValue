@@ -93,50 +93,72 @@ function runeValue(data, stat_focus) {
 
 function runeMaxValue(data, stat_focus) {
     let value = 0;
-    let prob = stat_focus.length;
-    let flag = false;
-    let divisor = 0;
-    let multiplier = 0.2;
+    let possible_stat = ['X', 1, 1, 1, 1, 1, 1, 'X', 1, 1, 1, 1, 1];
+    let focus_stat = ['X', 0, 0, 0, 0, 0, 0, 'X', 0, 0, 0, 0, 0];
+    let upgrades = 0;                           //how many second stat upgrade
+    let empty_slot = 4;                         //how many slot of second stat empty
+    let sec_max = 0;                            //maximum value of current second stat per upgrade
+    let pos_max_eff = 0;
+    //check grade
     if (data.class <= 4) {
         return 0;
     }
-    if (stat_focus.includes(eff_table[data.prefix_eff[0]])) {
-        value += data.prefix_eff[1] / eff_max_table[data.prefix_eff[0]];
-        prob--;
+    //set focus stat flag
+    eff_table.forEach(function(eff,i) {
+        if(stat_focus.includes(eff))
+            focus_stat[i]=1;
+    });
+    //check valid stat by slot
+    if (data.slot_no === 1) {
+        possible_stat[5]=possible_stat[6]=0;
+    } else if (data.slot_no === 3) {
+        possible_stat[3]=possible_stat[4]=0;
+    } else if (data.slot_no !== 5) {
+        possible_stat[data.pri_eff[0]]=0;
     }
-    if (data.class === 5) {
-        multiplier *= 0.85;
-    }
+    //calculate g5 2,4,6 slot
+    if (data.class === 5 && !data.slot_no%2)
+        value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
+    //check valid stat by prefix eff
+    if (data.prefix_eff[0])
+        possible_stat[data.prefix_eff[0]]=0;
+    //cacluate value by prefix eff
+    if (focus_stat[data.prefix_eff[0]])
+        value += data.prefix_eff[1]/eff_max_table[data.prefix_eff[0]];
+    //calculate upgrade remain number
+    upgrades = Math.floor(Math.min(data.upgrade_curr, 12) / 3);
+    //calculate current value,check max value of sec stat, check vaild stat by sec_eff & empty second stat
     data.sec_eff.forEach(function(eff) {
-        if (stat_focus.includes(eff_table[eff[0]])) {
+        if (focus_stat[eff[0]]) {
             value += eff[1] / eff_max_table[eff[0]];
-            prob--;
-            flag = true;
+            possible_stat[eff[0]]=0;
+            sec_max = Math.max(eff_upgrade_table[data.class][eff[0]][1] / eff_max_table[eff[0]], sec_max);
+            empty_slot--;
         }
     });
-    if (data.slot_no === 1) {
-        if (stat_focus.includes(7)) {
-            prob--;
-        }
-    } else if (data.slot_no === 3) {
-        if (stat_focus.includes(5)) {
-            prob--;
-        }
-    } else if (data.slot_no !== 5) {
-        if (stat_focus.includes(eff_table[data.pri_eff[0]])) {
-            prob--;
-        }
+    //calculate maximum value if current second stat upgrade
+    if(empty_slot < 4 - upgrades)                       //if empty stat slot is smaller than remain upgrades
+        value += sec_max*(4 - empty_slot - upgrades);   
+    //calculate by possible
+    for(let e = 0; e < empty_slot; e++){                //DIRTY CODE! THIS LOOP MUST BE FIXED!
+        let pos_max = 0;
+        possible_stat.forEach(function(eff,i) {
+            let pVal=0;                                 
+            if(eff&&focus_stat[i]){                     //if possible stat & focus
+                pVal=eff_upgrade_table[data.class][i][1] / eff_max_table[i];     //pVal is value of possible stat
+                if(pos_max < pVal){
+                    pos_max = pVal;     //maximum of possible value
+                    pos_max_eff = i;  //maximum possible value
+                }
+            }
+        });
+        value+=pos_max;
+        possible_stat[pos_max_eff]=0;
     }
-    if (flag && (Math.floor(Math.min(data.upgrade_curr, 12) / 3) < data.sec_eff.length)) {
-        value += (data.sec_eff.length - Math.floor(Math.min(data.upgrade_curr, 12) / 3)) * multiplier;
-    }
-    value += Math.min(4 - data.sec_eff.length, prob) * multiplier;
-    if (data.class === 5 && data.slot_no % 2 === 0) {
-        value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
-    }
-    divisor = 0.8 + Math.min(5, stat_focus.length) * 0.2;
-    value /= divisor;
+    //calculate by divisor
+    value /= (0.8 + Math.min(5, stat_focus.length) * 0.2);
     return value;
+    //get more accuracy at grade 5 runes. check option 1 by 1
 }
 
 function runeExpectedValue(data, stat_focus) {
