@@ -113,9 +113,8 @@ function runeMaxValue(data, stat_focus) {
         possible_stat[5]=possible_stat[6]=0;
     } else if (data.slot_no === 3) {
         possible_stat[3]=possible_stat[4]=0;
-    } else if (data.slot_no !== 5) {
-        possible_stat[data.pri_eff[0]]=0;
     }
+    possible_stat[data.pri_eff[0]]=0;
     //calculate g5 2,4,6 slot
     if (data.class === 5 && !(data.slot_no%2))
         value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
@@ -162,58 +161,62 @@ function runeMaxValue(data, stat_focus) {
 
 function runeExpectedValue(data, stat_focus) {
     let value = 0;
-    let prob = stat_focus.length;
-    let total = 11;
-    let upgrade = Math.floor(Math.min(data.upgrade_curr, 12) / 3);
-    let trap = 0;
-    let effective = 0;
-    let divisor = 0;
-    let multiplier = 0.16;
+    let possible_stat = ['', 1, 1, 1, 1, 1, 1, '', 1, 1, 1, 1, 1];
+    let focus_stat = ['', 0, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0];
+    let upgrades = 0;                           //how many second stat upgrade
+    let empty_slot = 4;                         //how many slot of second stat empty
+    let sec_sum = 0;                            //sum of expected value by exist second stat
+    let pos_sum = 0;                            //sum of expected value by possible&focused second stat
+    let pos_count = 0;                          //number of possible values. includes unfocused stat.
+    //check grade
     if (data.class <= 4) {
         return 0;
     }
-    if (stat_focus.includes(eff_table[data.prefix_eff[0]])) {
-        value += data.prefix_eff[1] / eff_max_table[data.prefix_eff[0]];
-        prob--;
-        total--;
-    } else if (data.prefix_eff[0]) {
-        total--;
+    //set focus stat flag
+    eff_table.forEach(function(eff,i) {
+        if(stat_focus.includes(eff))
+            focus_stat[i]=1;
+    });
+    //check valid stat by slot
+    if (data.slot_no === 1) {
+        possible_stat[5]=possible_stat[6]=0;
+    } else if (data.slot_no === 3) {
+        possible_stat[3]=possible_stat[4]=0;
     }
+    possible_stat[data.pri_eff[0]]=0;
+    //calculate g5 2,4,6 slot
+    if (data.class === 5 && !(data.slot_no%2))
+        value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
+    //check valid stat by prefix eff
+    if (data.prefix_eff[0])
+        possible_stat[data.prefix_eff[0]]=0;
+    //cacluate value by prefix eff
+    if (focus_stat[data.prefix_eff[0]])
+        value += data.prefix_eff[1]/eff_max_table[data.prefix_eff[0]];
+    //calculate upgrade remain number
+    upgrades = Math.floor(Math.min(data.upgrade_curr, 12) / 3);
+    //calculate current value,check max value of sec stat, check vaild stat by sec_eff & empty second stat
     data.sec_eff.forEach(function(eff) {
-        if (stat_focus.includes(eff_table[eff[0]])) {
+        if (focus_stat[eff[0]]) {
             value += eff[1] / eff_max_table[eff[0]];
-            effective++;
-            prob--;
-            total--;
-        } else {
-            trap++;
-            total--;
+            possible_stat[eff[0]]=0;
+            sec_sum += (eff_upgrade_table[data.class][eff[0]][1]+eff_upgrade_table[data.class][eff[0]][0])/2/eff_max_table[eff[0]];
+        }
+        empty_slot--;
+    });
+    //calculate average value if current second stat upgrade
+    if(empty_slot < 4 - upgrades)                   //if empty stat slot is smaller than remain upgrades
+        value += Math.pow(sec_sum/(4-empty_slot),4 - empty_slot - upgrades);   
+    //calculate by possible
+    possible_stat.forEach(function(eff,i) {                                 //DIRTY CODE! THIS LOOP MUST BE FIXED!
+        if(eff){                                    //if possible stat
+            pos_count++;
+            if(focus_stat[i])                       //if focused stat
+                pos_sum += (eff_upgrade_table[data.class][i][1]+eff_upgrade_table[data.class][i][0])/2/eff_max_table[i];
         }
     });
-    if (data.slot_no === 1) {
-        if (stat_focus.includes(7)) {
-            prob--;
-            total--;
-        }
-    } else if (data.slot_no === 3) {
-        if (stat_focus.includes(5)) {
-            prob--;
-            total--;
-        }
-    } else if (data.slot_no !== 5) {
-        if (stat_focus.includes(eff_table[data.pri_eff[0]])) {
-            prob--;
-            total--;
-        }
-    }
-    if (upgrade < effective + trap) {
-        value += effective / (effective + trap) * multiplier * (effective + trap - upgrade);
-    }
-    value += (4 - effective - trap) * multiplier * prob / total;
-    if (data.class === 5 && data.slot_no % 2 === 0) {
-        value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
-    }
-    divisor = 0.8 + Math.min(5, stat_focus.length) * 0.2;
-    value /= divisor;
+    value += pos_sum * empty_slot / pos_count;      //by nPm and somethings...
+    //calculate by divisor
+    value /= (0.8 + Math.min(5, stat_focus.length) * 0.2);
     return value;
 }
