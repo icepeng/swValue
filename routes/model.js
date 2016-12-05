@@ -93,20 +93,20 @@ function runeValue(data, stat_focus) {
 
 function runeMaxValue(data, stat_focus) {
     let value = 0;
-    let possible_stat = ['X', 1, 1, 1, 1, 1, 1, 'X', 1, 1, 1, 1, 1];
-    let focus_stat = ['X', 0, 0, 0, 0, 0, 0, 'X', 0, 0, 0, 0, 0];
+    let possible_stat = ['', 1, 1, 1, 1, 1, 1, '', 1, 1, 1, 1, 1];
+    let focus_stat = ['', 0, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0];
     let upgrades = 0;                           //how many second stat upgrade
     let empty_slot = 4;                         //how many slot of second stat empty
     let sec_max = 0;                            //maximum value of current second stat per upgrade
     let pos_max_eff = 0;
+    let divisor = 0;
     //check grade
     if (data.class <= 4) {
         return 0;
     }
     //set focus stat flag
-    eff_table.forEach(function(eff,i) {
-        if(stat_focus.includes(eff))
-            focus_stat[i]=1;
+    stat_focus.forEach(function(eff) {
+        focus_stat[eff_table.indexOf(eff)]=1;
     });
     //check valid stat by slot
     if (data.slot_no === 1) {
@@ -117,7 +117,7 @@ function runeMaxValue(data, stat_focus) {
         possible_stat[data.pri_eff[0]]=0;
     }
     //calculate g5 2,4,6 slot
-    if (data.class === 5 && !data.slot_no%2)
+    if (data.class === 5 && !(data.slot_no%2))
         value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     //check valid stat by prefix eff
     if (data.prefix_eff[0])
@@ -133,14 +133,14 @@ function runeMaxValue(data, stat_focus) {
             value += eff[1] / eff_max_table[eff[0]];
             possible_stat[eff[0]]=0;
             sec_max = Math.max(eff_upgrade_table[data.class][eff[0]][1] / eff_max_table[eff[0]], sec_max);
-            empty_slot--;
         }
+        empty_slot--;
     });
     //calculate maximum value if current second stat upgrade
     if(empty_slot < 4 - upgrades)                       //if empty stat slot is smaller than remain upgrades
-        value += sec_max*(4 - empty_slot - upgrades);   
+        value += sec_max*(4 - empty_slot - upgrades);
     //calculate by possible
-    for(let e = 0; e < empty_slot; e++){                //DIRTY CODE! THIS LOOP MUST BE FIXED!
+    for(let e = 0; e < empty_slot; e++){ 
         let pos_max = 0;
         possible_stat.forEach(function(eff,i) {
             let pVal=0;                                 
@@ -158,7 +158,6 @@ function runeMaxValue(data, stat_focus) {
     //calculate by divisor
     value /= (0.8 + Math.min(5, stat_focus.length) * 0.2);
     return value;
-    //get more accuracy at grade 5 runes. check option 1 by 1
 }
 
 function runeExpectedValue(data, stat_focus) {
