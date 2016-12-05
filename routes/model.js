@@ -130,9 +130,9 @@ function runeMaxValue(data, stat_focus) {
     data.sec_eff.forEach(function(eff) {
         if (focus_stat[eff[0]]) {
             value += eff[1] / eff_max_table[eff[0]];
-            possible_stat[eff[0]]=0;
             sec_max = Math.max(eff_upgrade_table[data.class][eff[0]][1] / eff_max_table[eff[0]], sec_max);
         }
+        possible_stat[eff[0]]=0;
         empty_slot--;
     });
     //calculate maximum value if current second stat upgrade
@@ -173,9 +173,8 @@ function runeExpectedValue(data, stat_focus) {
         return 0;
     }
     //set focus stat flag
-    eff_table.forEach(function(eff,i) {
-        if(stat_focus.includes(eff))
-            focus_stat[i]=1;
+    stat_focus.forEach(function(eff) {
+        focus_stat[eff_table.indexOf(eff)]=1;
     });
     //check valid stat by slot
     if (data.slot_no === 1) {
@@ -197,16 +196,16 @@ function runeExpectedValue(data, stat_focus) {
     upgrades = Math.floor(Math.min(data.upgrade_curr, 12) / 3);
     //calculate current value,check max value of sec stat, check vaild stat by sec_eff & empty second stat
     data.sec_eff.forEach(function(eff) {
-        if (focus_stat[eff[0]]) {
+        if (focus_stat[eff[0]]){
             value += eff[1] / eff_max_table[eff[0]];
-            possible_stat[eff[0]]=0;
             sec_sum += (eff_upgrade_table[data.class][eff[0]][1]+eff_upgrade_table[data.class][eff[0]][0])/2/eff_max_table[eff[0]];
         }
+        possible_stat[eff[0]]=0;
         empty_slot--;
     });
     //calculate average value if current second stat upgrade
-    if(empty_slot < 4 - upgrades)                   //if empty stat slot is smaller than remain upgrades
-        value += Math.pow(sec_sum/(4-empty_slot),4 - empty_slot - upgrades);   
+    if(empty_slot < 4 - upgrades)                       //if empty stat slot is smaller than remain upgrades
+        value += sec_sum/(4-empty_slot)*(4 - empty_slot - upgrades);  
     //calculate by possible
     possible_stat.forEach(function(eff,i) {                                 //DIRTY CODE! THIS LOOP MUST BE FIXED!
         if(eff){                                    //if possible stat
