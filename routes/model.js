@@ -55,7 +55,7 @@ exports.parseRunes = function(data, filter) {
         if (typeof rune.occupied_name !== 'undefined') {
             runeData.occupied_name = rune.occupied_name;
         } else {
-            runeData.occupied_name = 'X';
+            runeData.occupied_name = '미장착';
         }
         retData.push(runeData);
     });
@@ -77,6 +77,8 @@ exports.evaluateRunes = function(data, focus) {
 function runeValue(data, stat_focus) {
     let value = 0;
     let divisor = 0;
+    let flag = false;
+    let len = stat_focus.length;
     if (data.class <= 4) {
         return 0;
     }
@@ -91,14 +93,41 @@ function runeValue(data, stat_focus) {
     if (data.class === 5 && data.slot_no % 2 === 0) {
         value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     }
-    divisor = 0.8 + Math.min(5, stat_focus.length) * 0.2;
+    flag = false;
+    if (data.slot_no === 2) {
+        for (let i of stat_focus) {
+            if (['치확', '치피', '효적', '효저'].includes(i) === false) {
+                flag = true;
+                break;
+            }
+        }
+    } else if (data.slot_no === 4) {
+        for (let i of stat_focus) {
+            if (['공속', '효적', '효저'].includes(i) === false) {
+                flag = true;
+                break;
+            }
+        }
+    } else if (data.slot_no === 6) {
+        for (let i of stat_focus) {
+            if (['치확', '치피', '공속'].includes(i) === false) {
+                flag = true;
+                break;
+            }
+        }
+    }
+    if (flag && !stat_focus.includes(eff_table[data.pri_eff[0]])) {
+        value -= pri_max_table[data.class][data.pri_eff[0]] / eff_max_table[data.pri_eff[0]];
+    }
+    divisor = 0.8 + Math.min(5, len) * 0.2;
     value /= divisor;
     return value;
 }
 
 function runeMaxValue(data, stat_focus) {
     let value = 0;
-    let prob = stat_focus.length;
+    let len = stat_focus.length;
+    let prob = len;
     let flag = false;
     let divisor = 0;
     let multiplier = 0.2;
@@ -120,11 +149,11 @@ function runeMaxValue(data, stat_focus) {
         }
     });
     if (data.slot_no === 1) {
-        if (stat_focus.includes(7)) {
+        if (stat_focus.includes(eff_table[6])) {
             prob--;
         }
     } else if (data.slot_no === 3) {
-        if (stat_focus.includes(5)) {
+        if (stat_focus.includes(eff_table[4])) {
             prob--;
         }
     } else if (data.slot_no !== 5) {
@@ -139,16 +168,44 @@ function runeMaxValue(data, stat_focus) {
     if (data.class === 5 && data.slot_no % 2 === 0) {
         value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     }
-    divisor = 0.8 + Math.min(5, stat_focus.length) * 0.2;
+    flag = false;
+    if (data.slot_no === 2) {
+        for (let i of stat_focus) {
+            if (['치확', '치피', '효적', '효저'].includes(i) === false) {
+                flag = true;
+                break;
+            }
+        }
+    } else if (data.slot_no === 4) {
+        for (let i of stat_focus) {
+            if (['공속', '효적', '효저'].includes(i) === false) {
+                flag = true;
+                break;
+            }
+        }
+    } else if (data.slot_no === 6) {
+        for (let i of stat_focus) {
+            if (['치확', '치피', '공속'].includes(i) === false) {
+                flag = true;
+                break;
+            }
+        }
+    }
+    if (flag && !stat_focus.includes(eff_table[data.pri_eff[0]])) {
+        value -= pri_max_table[data.class][data.pri_eff[0]] / eff_max_table[data.pri_eff[0]];
+    }
+    divisor = 0.8 + Math.min(5, len) * 0.2;
     value /= divisor;
     return value;
 }
 
 function runeExpectedValue(data, stat_focus) {
     let value = 0;
-    let prob = stat_focus.length;
+    let len = stat_focus.length;
+    let prob = len;
     let total = 11;
     let upgrade = Math.floor(Math.min(data.upgrade_curr, 12) / 3);
+    let flag = false;
     let trap = 0;
     let effective = 0;
     let divisor = 0;
@@ -175,15 +232,15 @@ function runeExpectedValue(data, stat_focus) {
         }
     });
     if (data.slot_no === 1) {
-        if (stat_focus.includes(7)) {
+        if (stat_focus.includes(eff_table[6])) {
             prob--;
-            total--;
         }
+        total -= 2;
     } else if (data.slot_no === 3) {
-        if (stat_focus.includes(5)) {
+        if (stat_focus.includes(eff_table[4])) {
             prob--;
-            total--;
         }
+        total -= 2;
     } else if (data.slot_no !== 5) {
         if (stat_focus.includes(eff_table[data.pri_eff[0]])) {
             prob--;
@@ -197,7 +254,33 @@ function runeExpectedValue(data, stat_focus) {
     if (data.class === 5 && data.slot_no % 2 === 0) {
         value -= (pri_max_table[6][data.pri_eff[0]] - pri_max_table[5][data.pri_eff[0]]) / eff_max_table[data.pri_eff[0]];
     }
-    divisor = 0.8 + Math.min(5, stat_focus.length) * 0.2;
+    flag = false;
+    if (data.slot_no === 2) {
+        for (let i of stat_focus) {
+            if (['치확', '치피', '효적', '효저'].includes(i) === false) {
+                flag = true;
+                break;
+            }
+        }
+    } else if (data.slot_no === 4) {
+        for (let i of stat_focus) {
+            if (['공속', '효적', '효저'].includes(i) === false) {
+                flag = true;
+                break;
+            }
+        }
+    } else if (data.slot_no === 6) {
+        for (let i of stat_focus) {
+            if (['치확', '치피', '공속'].includes(i) === false) {
+                flag = true;
+                break;
+            }
+        }
+    }
+    if (flag && !stat_focus.includes(eff_table[data.pri_eff[0]])) {
+        value -= pri_max_table[data.class][data.pri_eff[0]] / eff_max_table[data.pri_eff[0]];
+    }
+    divisor = 0.8 + Math.min(5, len) * 0.2;
     value /= divisor;
     return value;
 }
