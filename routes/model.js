@@ -45,8 +45,8 @@ exports.parseRunes = function(data, filter) {
             let input;
             if (eff[2]) eff[0] = eff[2]; //변환
             if (eff[3]) eff[1] = (eff[1] + eff[3]) + '*'; //연마
+            if (stat_percent.includes(eff[0])) eff[1] += '%';
             input = `${eff_table[eff[0]]}${eff[2]?'*':''} + ${eff[1]}`;
-            if (stat_percent.includes(eff[0])) input += '%';
             runeData.sec_eff.push(input);
         });
         runeData.upgrade_curr = '+' + rune.upgrade_curr;
