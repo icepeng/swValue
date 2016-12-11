@@ -42,13 +42,11 @@ exports.parseRunes = function(data, filter) {
             if (stat_percent.includes(rune.prefix_eff[0])) runeData.prefix_eff += '%';
         }
         rune.sec_eff.forEach(function(eff) {
-            let input;
-            if (eff[2]) eff[0] = eff[2]; //변환
-            if (eff[3]) eff[1] += eff[3]; //연마
-            if (stat_percent.includes(eff[0])) eff[1] += '%';
-            if (eff[3]) eff[1] += '*';
-            input = `${eff_table[eff[0]]}${eff[2]?'*':''} + ${eff[1]}`;
-            runeData.sec_eff.push(input);
+            let type, val;
+            type = eff[2] ? eff[2] : eff[0]; //변환
+            val = eff[1] + eff[3]; //연마
+            if (stat_percent.includes(type)) val += '%';
+            runeData.sec_eff.push(`${eff_table[type]}${eff[2]?'*':''} + ${val}${eff[3]?'*':''}`);
         });
         runeData.upgrade_curr = '+' + rune.upgrade_curr;
         runeData.value = Math.round(rune.value * 100 * 100) / 100 + '%';
@@ -222,6 +220,9 @@ function runeExpectedValue(data, stat_focus) {
         total--;
     } else if (data.prefix_eff[0]) {
         total--;
+    }
+    if (data.class === 5) {
+        multiplier *= 0.85;
     }
     data.sec_eff.forEach(function(eff) {
         if (stat_focus.includes(eff_table[eff[4]])) {
