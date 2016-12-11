@@ -44,8 +44,9 @@ exports.parseRunes = function(data, filter) {
         rune.sec_eff.forEach(function(eff) {
             let input;
             if (eff[2]) eff[0] = eff[2]; //변환
-            if (eff[3]) eff[1] = (eff[1] + eff[3]) + '*'; //연마
+            if (eff[3]) eff[1] += eff[3]; //연마
             if (stat_percent.includes(eff[0])) eff[1] += '%';
+            if (eff[3]) eff[1] += '*';
             input = `${eff_table[eff[0]]}${eff[2]?'*':''} + ${eff[1]}`;
             runeData.sec_eff.push(input);
         });
