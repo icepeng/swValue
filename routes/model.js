@@ -8,7 +8,7 @@ const pri_max_table = [
 const eff_upgrade_table = [
     [],[],[],[],[],
     [0, [90, 300], [4, 7], [8, 15], [4, 7], [8, 15], [3, 6], 0, [3, 5], [3, 5], [3, 5], [3, 7], [3, 7]],
-    [0, [135, 375], [5, 8], [10, 20], [5, 8], [10, 20], [4, 8], 0, [4, 6], [4, 6], [4, 7], [4, 8], [4, 8]]
+    [0, [135, 375],[5, 8], [10, 20], [5, 8], [10, 20], [4, 8], 0, [4, 6], [4, 6], [4, 7], [4, 8], [4, 8]]
 ];
 const set_id_table = ['X', '활력', '수호', '신속', '칼날', '격노', '집중', '인내', '맹공', 'X', '절망', '흡혈', 'X', '폭주', '응보', '의지', '보호', '반격', '파괴', '투지', '결의', '고양', '명중', '근성'];
 const eff_table = ['X', '깡체', '체력', '깡공', '공격력', '깡방', '방어력', 'X', '공속', '치확', '치피', '효저', '효적'];
@@ -43,14 +43,16 @@ exports.parseRunes = function(data, filter) {
         }
         rune.sec_eff.forEach(function(eff) {
             let input;
-            input = eff_table[eff[0]] + ' + ' + eff[1];
+            if (eff[2]) eff[0] = eff[2]; //변환
+            if (eff[3]) eff[1] = (eff[1] + eff[3]) + '*'; //연마
+            input = `${eff_table[eff[0]]}${eff[2]?'*':''} + ${eff[1]}`;
             if (stat_percent.includes(eff[0])) input += '%';
             runeData.sec_eff.push(input);
         });
-        runeData.upgrade_curr = rune.upgrade_curr;
-        runeData.value = Math.round(rune.value * 100 * 100) / 100;
-        runeData.max_value = Math.round(rune.max_value * 100 * 100) / 100;
-        runeData.expected_value = Math.round(rune.expected_value * 100 * 100) / 100;
+        runeData.upgrade_curr = '+' + rune.upgrade_curr;
+        runeData.value = Math.round(rune.value * 100 * 100) / 100 + '%';
+        runeData.max_value = Math.round(rune.max_value * 100 * 100) / 100 + '%';
+        runeData.expected_value = Math.round(rune.expected_value * 100 * 100) / 100 + '%';
         runeData.grade = runeData.sec_eff.length;
         if (typeof rune.occupied_name !== 'undefined') {
             runeData.occupied_name = rune.occupied_name;
@@ -86,8 +88,8 @@ function runeValue(data, stat_focus) {
         value += data.prefix_eff[1] / eff_max_table[data.prefix_eff[0]];
     }
     data.sec_eff.forEach(function(eff) {
-        if (stat_focus.includes(eff_table[eff[0]])) {
-            value += eff[1] / eff_max_table[eff[0]];
+        if (stat_focus.includes(eff_table[eff[4]])) {
+            value += eff[5] / eff_max_table[eff[4]];
         }
     });
     if (data.class === 5 && data.slot_no % 2 === 0) {
@@ -142,8 +144,8 @@ function runeMaxValue(data, stat_focus) {
         multiplier *= 0.85;
     }
     data.sec_eff.forEach(function(eff) {
-        if (stat_focus.includes(eff_table[eff[0]])) {
-            value += eff[1] / eff_max_table[eff[0]];
+        if (stat_focus.includes(eff_table[eff[4]])) {
+            value += eff[5] / eff_max_table[eff[4]];
             prob--;
             flag = true;
         }
@@ -221,8 +223,8 @@ function runeExpectedValue(data, stat_focus) {
         total--;
     }
     data.sec_eff.forEach(function(eff) {
-        if (stat_focus.includes(eff_table[eff[0]])) {
-            value += eff[1] / eff_max_table[eff[0]];
+        if (stat_focus.includes(eff_table[eff[4]])) {
+            value += eff[5] / eff_max_table[eff[4]];
             effective++;
             prob--;
             total--;
