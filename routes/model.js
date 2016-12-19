@@ -42,11 +42,13 @@ exports.parseRunes = function(data, filter) {
             if (stat_percent.includes(rune.prefix_eff[0])) runeData.prefix_eff += '%';
         }
         rune.sec_eff.forEach(function(eff) {
-            let type, val;
-            type = eff[2] ? eff[2] : eff[0]; //변환
-            val = eff[1] + eff[3]; //연마
-            if (stat_percent.includes(type)) val += '%';
-            runeData.sec_eff.push(`${eff_table[type]}${eff[2]?'*':''} + ${val}${eff[3]?'*':''}`);
+            let str = '';
+            str += eff[2] ? eff_table[eff[2]] + '*' : eff_table[eff[0]]; //옵션, 변환
+            str += ' + ';
+            str += eff[1]; //수치
+            if (eff[3]) str += `(+${eff[3]})`;
+            if (stat_percent.includes(eff[2] ? eff[2] : eff[0])) str += '%';
+            runeData.sec_eff.push(str);
         });
         runeData.upgrade_curr = '+' + rune.upgrade_curr;
         runeData.value = Math.round(rune.value * 100 * 100) / 100 + '%';
