@@ -43,11 +43,12 @@ exports.parseRunes = function(data, filter) {
         }
         rune.sec_eff.forEach(function(eff) {
             let str = '';
-            str += eff[2] ? eff_table[eff[2]] + '*' : eff_table[eff[0]]; //옵션, 변환
+            str += eff_table[eff[0]]; //옵션, 변환
+            if (eff[2]) str += '*';
             str += ' + ';
             str += eff[1]; //수치
             if (eff[3]) str += `(+${eff[3]})`;
-            if (stat_percent.includes(eff[2] ? eff[2] : eff[0])) str += '%';
+            if (stat_percent.includes(eff[0])) str += '%';
             runeData.sec_eff.push(str);
         });
         runeData.upgrade_curr = '+' + rune.upgrade_curr;
