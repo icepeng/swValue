@@ -190,8 +190,7 @@ router.post('/file_upload', multipartMiddleWare, function(req, res) {
             }
             req.session.data.forEach(rune => {
                 rune.sec_eff.forEach(e => {
-                    if (e[2]) e[4] = e[2];
-                    else e[4] = e[0];
+                    e[4] = e[0];
                     e[5] = e[1] + e[3];
                 });
             });
